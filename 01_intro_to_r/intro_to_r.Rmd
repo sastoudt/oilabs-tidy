@@ -437,7 +437,7 @@ LastName-LastName-L-01.Rmd  (add a third last name if applicable)
 
 LastName-LastName-L-01.html
 
-*Due*: Friday, September 4th (6 pm Eastern time)
+*Due*: Monday, September 7th (beginning of class time Eastern time)
 
 * * *
 

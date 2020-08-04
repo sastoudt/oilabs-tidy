@@ -19,9 +19,9 @@ library(openintro)
 
 This lab will occur multi-modally and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s) from last week. 
 
-If you are both in person, you don't have to use Zoom, but please use appropriate social distancing. Zoom can still be handy to share your screen with one another. 
+If you are both in person, you don't have to use Zoom, but please use appropriate physical distancing. Zoom can still be handy to share your screen with one another. 
 
-If at least one of you is in person, you may raise your hand to ask me a question. I will observe appropriate social distancing protocol, so we still might need Zoom to share screens.
+If at least one of you is in person, you may raise your hand to ask me a question. I will observe appropriate physical distancing protocol, so we still might need Zoom to share screens.
 
 For those participating remotely I will still be available in the main Zoom room to answer questions. If you have a question or technical problem, click the "Ask for Help" button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.  
 
@@ -406,7 +406,7 @@ LastName-LastName-L-02.Rmd  (add a third last name if applicable)
 
 LastName-LastName-L-02.html
 
-*Due*: Friday, September 11th (6 pm Eastern time)
+*Due*: Monday, September 14th (beginning of class time, Eastern time)
 
 
 * * *
