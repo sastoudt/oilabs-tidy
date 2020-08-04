@@ -23,6 +23,8 @@ For those of you participating asynchronously, alert me to technical challengs o
 
 Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To do so, one of you can be the main recorder of answers in the lab document. It may be helpful to share your screen. You will be working with this same partner/group for the next lab, so you will switch roles next week. 
 
+You all should also feel free to ask and answer questions amongst yourselves via Zoom if participating synchronously or via Slack if participating asynchronously. Please note at the end of the lab document who you consulted for help.
+
 ## The RStudio Interface
 
 The goal of this lab is to introduce you to R and RStudio, which you'll be using throughout the course both to learn the statistical concepts discussed in the course and to analyze real data and come to informed conclusions. 
