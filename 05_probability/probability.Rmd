@@ -15,6 +15,18 @@ library(tidyverse)
 library(openintro)
 ```
 
+## Logistics
+
+This lab will occur remotely and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s). 
+
+For those participating syncronously I will be available in the main Zoom room to answer questions. If you have a question or technical problem, click the "Ask for Help" button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.  
+
+For those of you participating asynchronously, alert me to technical challengs over Slack DM, and I will get back to you as soon as possible. For questions about the content of the lab, please sign up for an office hour time block. 
+
+Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To do so, one of you can be the main recorder of answers in the lab document. It may be helpful to share your screen. You will be working with this same partner/group for the next lab, so you will switch roles next week. 
+
+You all should also feel free to ask and answer questions amongst yourselves via Zoom if participating synchronously or via Slack if participating asynchronously. Please note at the end of the lab document who you consulted for help.
+
 ## The Hot Hand
 
 Basketball players who make several baskets in succession are described as 
@@ -24,6 +36,12 @@ next. However, [a 1985 paper](http://www.sciencedirect.com/science/article/pii/0
 that contradicted this belief and showed that successive shots are independent 
 events. This paper started a great controversy that continues to this day, as you can 
 see by Googling *hot hand basketball*.
+
+More examples:
+
+- [Golden State Warriors and the Hot Hand](https://link.springer.com/content/pdf/10.1007/s00283-018-9825-3.pdf)
+
+- [Hot Hand in Baseball](http://cdar.berkeley.edu/wp-content/uploads/2020/03/Hot-or-Not.pdf)
 
 We do not expect to resolve this controversy today. However, in this lab we'll 
 apply one approach to answering questions like this. The goals for this lab are 
@@ -51,8 +69,9 @@ To create your new lab report, in RStudio, go to New File -> R Markdown... Then,
 
 ### Data
 
-Your investigation will focus on the performance of one player: [Kobe Bryant](https://en.wikipedia.org/wiki/Kobe_Bryant) of the Los Angeles Lakers. 
-His performance against the Orlando Magic in the [2009 NBA Finals](https://en.wikipedia.org/wiki/2009_NBA_Finals) earned him the title *Most Valuable Player* and many spectators commented on how he appeared to show a hot hand. The data file we'll use is called `kobe_basket`.
+CW: death, plane crash
+
+Your investigation will focus on the performance of one player: [Kobe Bryant](https://en.wikipedia.org/wiki/Kobe_Bryant) formally of the Los Angeles Lakers before his tragic death in a plane crash. His performance against the Orlando Magic in the [2009 NBA Finals](https://en.wikipedia.org/wiki/2009_NBA_Finals) earned him the title *Most Valuable Player* and many spectators commented on how he appeared to show a hot hand. The data file we'll use is called `kobe_basket`.
 
 ```{r glimpse-data}
 glimpse(kobe_basket)
@@ -88,6 +107,8 @@ in a data frame called `kobe_streak` as the `length` variable.
 
 ```{r calc-streak-kobe}
 kobe_streak <- calc_streak(kobe_basket$shot)
+
+head(kobe_streak)
 ```
 
 We can then take a look at the distribution of these streak lengths.
@@ -158,7 +179,7 @@ sample(coin_outcomes, size = 1, replace = TRUE)
 
 The vector `coin_outcomes` can be thought of as a hat with two slips of paper in it: 
 one slip says `heads` and the other says `tails`. The function `sample` draws 
-one slip from the hat and tells us if it was a head or a tail. 
+one slip from the hat and tells us if it was a head or a tail. Note `sample` (with argument `size`) works on a vector while `slice_sample` (with argument `n`) works on a data frame.
 
 Run the second command listed above several times. Just like when flipping a 
 coin, sometimes you'll get a heads, sometimes you'll get a tails, but in the 
@@ -206,7 +227,7 @@ chip that says "head"" is 20%, and "tail" is 80%.
     about setting a seed below.
     
 <div id="boxedtext">
-**A note on setting a seed:** Setting a seed will cause R to select the same 
+**A note on setting a seed:** Remember that setting a seed will cause R to select the same 
 sample each time you knit your document. This will make sure your results don't
 change each time you knit, and it will also ensure reproducibility of your work 
 (by setting the same seed it will be possible to reproduce your results). You can
@@ -214,8 +235,7 @@ set a seed like this:
 ```{r set-seed}
 set.seed(35797)                 # make sure to change the seed
 ```
-The number above is completely arbitraty. If you need inspiration, you can use your
-ID, birthday, or just a random string of numbers. The important thing is that you
+The number above is completely arbitraty. If you need inspiration, I use the numbers in the date and time (but dropping any zeros). The important thing is that you
 use each seed only once in a document. Remember to do this **before** you sample
 in the exercise above.
 </div>
@@ -289,7 +309,19 @@ a hot hand.
     distribution of streak lengths for the simulated shooter? Using this 
     comparison, do you have evidence that the hot hand model fits Kobe's 
     shooting patterns? Explain.
+    
+## Deliverables
+
+When you are finished editing your Markdown document click the "Knit" button and choose "Knit to HTML" in the top left corner of RStudio. This will run all of your code and create a formatted document of the output. If you get an error, it means something in your Markdown file isn't right, either an error in code or some error in formatting. Call me into your breakout room, and we will troubleshoot.
+
+Submit your Markdown document and knitted file to [Moodle](https://moodle.smith.edu/) as:
+
+LastName-LastName-L-05.Rmd  (add a third last name if applicable)
+
+LastName-LastName-L-05.html
+
+*Due*: Monday, October 5th (beginning of class time, Eastern time)
 
 * * *
 
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a> and was adapted by Sara Stoudt.
