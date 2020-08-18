@@ -115,11 +115,11 @@ In this lab, you have access to the entire population, but this is rarely the ca
 Gathering information on an entire population is often extremely costly or impossible. 
 Because of this, we often take a sample of the population and use that to understand the properties of the population.
 
-If you are interested in estimating the proportion of people who don't think the work scientists do benefits them, you can use the `sample_n` command to survey the population.
+If you are interested in estimating the proportion of people who don't think the work scientists do benefits them, you can use the `slice_sample` command to survey the population.
 
 ```{r samp1}
 samp1 <- global_monitor %>%
-  sample_n(50)
+  slice_sample(50)
 ```
 
 This command collects a simple random sample of size 50 from the `global_monitor` dataset, and assigns the result to `samp1`. 
@@ -127,7 +127,7 @@ This is similar to randomly drawing names from a hat that contains the names of 
 Working with these 50 names is considerably simpler than working with all 100,000 people in the population.
 
 1.  Describe the distribution of responses in this sample. How does it compare to the 
-    distribution of responses in the population. **Hint:** Although the `sample_n` 
+    distribution of responses in the population. **Hint:** Although the `slice_sample` 
     function takes a random sample of observations (i.e. rows) from the dataset, 
     you can still refer to the variables in the dataset with the same names. Code 
     you presented earlier for visualizing and summarising the population data will 
@@ -216,7 +216,7 @@ Next, you will review how this set of code works.
 
 The idea behind the `rep_sample_n` function is *repetition*. 
 Earlier, you took a single sample of size `n` (50) from the population of all people in the population. 
-With this new function, you can repeat this sampling procedure `rep` times in order to build a distribution of a series of sample statistics, which is called the **sampling distribution**. 
+With this new function, you can repeat this sampling procedure `rep` times in order to build a distribution of a series of sample statistics, which is called the **sampling distribution**. For some [context](https://github.com/tidymodels/infer/issues/337) on the function naming: `slice_sample` took over for an older function `sample_n`.
 
 Note that in practice one rarely gets to build true sampling distributions, because one rarely has access to data from the entire population. 
 
@@ -225,7 +225,7 @@ We would have to manually run the following code 15,000 times
 
 ```{r sample-code}
 global_monitor %>%
-  sample_n(size = 50, replace = TRUE) %>%
+  slice_sample(n = 50, replace = TRUE) %>%
   count(scientist_work) %>%
   mutate(p_hat = n /sum(n)) %>%
   filter(scientist_work == "Doesn't benefit")

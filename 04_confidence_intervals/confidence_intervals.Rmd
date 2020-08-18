@@ -111,7 +111,7 @@ In this lab, you'll start with a simple random sample of size 60 from the popula
 ```{r sample}
 n <- 60
 samp <- us_adults %>%
-  sample_n(size = n)
+  slice_sample(n = n)
 ```
 
 1.  What percent of the adults in your sample think climate change affects their 
