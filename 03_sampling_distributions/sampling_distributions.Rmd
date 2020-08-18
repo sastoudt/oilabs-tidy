@@ -12,7 +12,6 @@ output:
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(eval = TRUE, results = FALSE, fig.show = "hide", message = FALSE, warning = F)
-set.seed(1234)
 ```
 
 ## Logistics
@@ -34,10 +33,6 @@ In this lab, you will investigate the ways in which the statistics from a random
 sample of data can serve as point estimates for population parameters. We're 
 interested in formulating a *sampling distribution* of our estimate in order 
 to learn about the properties of the estimate, such as its distribution.
-
-
-
-
 
 
 ### Load packages
