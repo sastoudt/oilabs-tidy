@@ -17,13 +17,9 @@ library(openintro)
 
 ## Logistics
 
-This lab will occur multi-modally and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s) from last week. 
+This lab will occur remotely and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s) from last week. 
 
-If you are both in person, you don't have to use Zoom, but please use appropriate physical distancing. Zoom can still be handy to share your screen with one another. 
-
-If at least one of you is in person, you may raise your hand to ask me a question. I will observe appropriate physical distancing protocol, so we still might need Zoom to share screens.
-
-For those participating remotely I will still be available in the main Zoom room to answer questions. If you have a question or technical problem, click the "Ask for Help" button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.  
+For those participating syncronously I will be available in the main Zoom room to answer questions. If you have a question or technical problem, click the "Ask for Help" button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.  
 
 For those of you participating asynchronously, alert me to technical challengs over Slack DM, and I will get back to you as soon as possible. For questions about the content of the lab, please sign up for an office hour time block. 
 
@@ -173,7 +169,7 @@ revealed in one that are obscured in another?
 
 If you want to visualize only on delays of flights headed to Los Angeles, you need 
 to first `filter` the data for flights with that destination (`dest == "LAX"`)
-and then make a histogram of the departure delays of only those flights.
+and then make a histogram of the departure delays of only those flights. Note that a common mistake is not using the double equal signs. Remember one equal sign assigns "LAX" to the variable `dest` while two equal signs asks the question "does each value in `dest` match 'LAX'?".
 
 ```{r lax-flights-hist}
 lax_flights <- nycflights %>%
@@ -217,12 +213,12 @@ You can also obtain numerical summaries for these flights:
 
 ```{r lax-flights-summ}
 lax_flights %>%
-  summarise(mean_dd   = mean(dep_delay), 
+  summarize(mean_dd   = mean(dep_delay), 
             median_dd = median(dep_delay), 
             n         = n())
 ```
 
-Note that in the `summarise` function you created a list of three different
+Note that in the `summarize` function you created a list of three different
 numerical summaries that you were interested in. The names of these elements are 
 user defined, like `mean_dd`, `median_dd`, `n`, and you can customize these names 
 as you like (just don't use spaces in your names). Calculating these summary 
@@ -253,9 +249,9 @@ sfo_feb_flights <- nycflights %>%
   filter(dest == "SFO", month == 2)
 ```
 
-Note that you can separate the conditions using commas if you want flights that
+Note that you can separate the conditions using commas (or "&") if you want flights that
 are both headed to SFO **and** in February. If you are interested in either
-flights headed to SFO **or** in February, you can use the `|` instead of the comma.
+flights headed to SFO **or** in February, you can use the `|` instead of the comma. (This is located above the backslash.)
 
 1.  Create a new data frame that includes flights headed to SFO in February, 
     and save this data frame as `sfo_feb_flights`. How many flights 
@@ -272,7 +268,7 @@ the `group_by` function to get the same summary stats for each origin airport:
 ```{r summary-custom-list-origin}
 sfo_feb_flights %>%
   group_by(origin) %>%
-  summarise(median_dd = median(dep_delay), iqr_dd = IQR(dep_delay), n_flights = n())
+  summarize(median_dd = median(dep_delay), iqr_dd = IQR(dep_delay), n_flights = n())
 ```
 
 Here, we first grouped the data by `origin` and then calculated the summary 
@@ -292,13 +288,13 @@ Let's think about how you could answer this question:
 - First, calculate monthly averages for departure delays. With the new language
 you are learning, you could
     + `group_by` months, then
-    + `summarise` mean departure delays.
+    + `summarize` mean departure delays.
 - Then, you could to `arrange` these average delays in `desc`ending order
 
 ```{r mean-dep-delay-months}
 nycflights %>%
   group_by(month) %>%
-  summarise(mean_dd = mean(dep_delay)) %>%
+  summarize(mean_dd = mean(dep_delay)) %>%
   arrange(desc(mean_dd))
 ```
 
@@ -395,6 +391,24 @@ ggplot(data = dl_aa_ua, aes(x = dep_delay, y = arr_delay, color = carrier)) +
 ```
 
 You may want to refer to the [ggplot cheatsheet](https://rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf) and the [dplyr cheatsheet](https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf).
+
+## Let's Recap
+
+The `dplyr` package is full of [verbs](https://www.youtube.com/watch?v=tcC_Uue7uaQ) that we can use to organize data. Write a question that could be answered using each of the following functions.
+
+- `arrange()`
+- `filter()`
+- `group_by()`
+- `mutate()`
+
+The `ggplot2` package is full of geometries that we can use to display data. Write a question that could be answered by a plot that uses each of the following geometries.
+
+- `geom_bar()`
+- `geom_hist()`
+- `geom_line()`
+- `geom_point()`
+
+
 
 ## Deliverables
 

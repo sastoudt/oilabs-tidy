@@ -397,7 +397,7 @@ That was a short introduction to R and RStudio, but we will provide you with mor
 
 In this course we will be using the suite of R packages from the **tidyverse**. 
 The book [R For Data Science](https://r4ds.had.co.nz/) by Grolemund and Wickham is a fantastic resource for data analysis in R with the tidyverse. 
-If you are googling for R code, make sureto also include these package names in your search query. For example, instead of googling "scatterplot in R", google "scatterplot in R with the tidyverse".
+If you are googling for R code, make sure to also include these package names in your search query. For example, instead of googling "scatterplot in R", google "scatterplot in R with the tidyverse".
 
 These cheatsheets may come in handy throughout the semester:
 
