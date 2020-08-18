@@ -11,22 +11,34 @@ output:
 ---
 
 ```{r global_options, include=FALSE}
-knitr::opts_chunk$set(eval = TRUE, results = FALSE, fig.show = "hide", message = FALSE)
+knitr::opts_chunk$set(eval = TRUE, results = FALSE, fig.show = "hide", message = FALSE, warning = F)
 set.seed(1234)
 ```
+
+## Logistics
+
+This lab will occur remotely and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s). 
+
+For those participating syncronously I will be available in the main Zoom room to answer questions. If you have a question or technical problem, click the "Ask for Help" button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.  
+
+For those of you participating asynchronously, alert me to technical challengs over Slack DM, and I will get back to you as soon as possible. For questions about the content of the lab, please sign up for an office hour time block. 
+
+Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To do so, one of you can be the main recorder of answers in the lab document. It may be helpful to share your screen. You will be working with this same partner/group for the next lab, so you will switch roles next week. 
+
+You all should also feel free to ask and answer questions amongst yourselves via Zoom if participating synchronously or via Slack if participating asynchronously. Please note at the end of the lab document who you consulted for help.
+
+
+## Getting Started
 
 In this lab, you will investigate the ways in which the statistics from a random 
 sample of data can serve as point estimates for population parameters. We're 
 interested in formulating a *sampling distribution* of our estimate in order 
 to learn about the properties of the estimate, such as its distribution.
 
-<div id="boxedtext">
-**Setting a seed:** We will take some random samples and build sampling distributions
-in this lab, which means you should set a seed at the start of your lab. If this
-concept is new to you, review the lab on probability.
-</div>
 
-## Getting Started
+
+
+
 
 ### Load packages
 
@@ -40,6 +52,18 @@ library(tidyverse)
 library(openintro)
 library(infer)
 ```
+
+### Random samples
+
+We will take some random samples and build sampling distributions
+in this lab. This means that each time you rerun the sampling code, you will get different answers. This is not ideal as your answers would have to change each time you reran code. By "setting a seed" at the start of your lab you tell the random number generator where to start in its sequence of random numbers (so you'll get the same answer each time you rerun the code in the same order). You can think of the number you pick for `set.seed()` as a bookmark for the sampling algorithm.
+
+Talking more about this is beyond the scope of the class, but if you are interested, I point you to Kellie Ottoboni's cool work on [sampling in R](http://www.kellieottoboni.com/posts/2019/01/random-problems-with-r/).
+
+```{r set-seed, message = F}
+set.seed(818155)
+```
+
 
 ### Creating a reproducible lab report
 
@@ -65,9 +89,9 @@ global_monitor <- tibble(
 )
 ```
 
-The name of the data frame is `global_monitor` and the name of the variable that contains responses to the question *"Do you believe that the work scientists do benefit people like you?"* is `scientist_work`.
+The `tibble()` function makes a tidy data frame. The name of the data frame is `global_monitor` and the name of the variable that contains responses to the question *"Do you believe that the work scientists do benefit people like you?"* is `scientist_work`. To populate this variable we `c`ombine the following two groups: `rep`eat "Benefits 80,000 times and `rep`eat ``Doesn't benefit" 20,000 times.
 
-We can quickly visualize the distribution of these responses using a bar plot.
+We can quickly visualize the distribution of these responses using a bar plot. Note that `coord_flip()` makes the bars go left to right instead of top to bottom to save space on the page.
 
 ```{r bar-plot-pop, fig.height=2.5, fig.width=10}
 ggplot(global_monitor, aes(x = scientist_work)) +
@@ -79,9 +103,12 @@ ggplot(global_monitor, aes(x = scientist_work)) +
   coord_flip() 
 ```
 
-We can also obtain summary statistics to confirm we constructed the data frame correctly.
+We can also obtain summary statistics to confirm we constructed the data frame correctly. `count` is a shortcut to `group_by(scientist_work) %>% summarise(n = n())`
 
 ```{r summ-stat-pop, results = TRUE}
+global_monitor %>%
+  count(scientist_work) 
+
 global_monitor %>%
   count(scientist_work) %>%
   mutate(p = n /sum(n))
@@ -156,9 +183,19 @@ Note that we specify that `replace = TRUE` since sampling distributions are cons
 ```{r iterate}
 sample_props50 <- global_monitor %>%
                     rep_sample_n(size = 50, reps = 15000, replace = TRUE) %>%
-                    count(scientist_work) %>%
-                    mutate(p_hat = n /sum(n)) %>%
+                    count(scientist_work) 
+
+head(sample_props50)
+
+sample_props50 <- sample_props50 %>%
+                    mutate(p_hat = n /sum(n))
+
+head(sample_props50)
+
+sample_props50 <- sample_props50 %>%
                     filter(scientist_work == "Doesn't benefit")
+
+head(sample_props50)
 ```
 
 And we can visualize the distribution of these proportions with a histogram.
@@ -361,7 +398,19 @@ You are welcome to use the app for exploration.
 1.  Of the sampling distributions from 2 and 3, which has a smaller spread?  If
     you're concerned with making estimates that are more often close to the 
     true value, would you prefer a sampling distribution with a large or small spread?
+    
+## Deliverables
+
+When you are finished editing your Markdown document click the "Knit" button and choose "Knit to HTML" in the top left corner of RStudio. This will run all of your code and create a formatted document of the output. If you get an error, it means something in your Markdown file isn't right, either an error in code or some error in formatting. Call me into your breakout room, and we will troubleshoot.
+
+Submit your Markdown document and knitted file to [Moodle](https://moodle.smith.edu/) as:
+
+LastName-LastName-L-03.Rmd  (add a third last name if applicable)
+
+LastName-LastName-L-03.html
+
+*Due*: Monday, September 21st (beginning of class time, Eastern time)
 
 * * *
 
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a> and was adapted by Sara Stoudt.

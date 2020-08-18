@@ -356,12 +356,12 @@ In the previous few pages, you recreated some of the displays and preliminary an
 Your assignment involves repeating these steps, but for present day birth records in the United States. 
 The data are stored in a data frame called `present`.
 
-To find the minimum and maximum values of columns, you can use the functions `min` and `max` within a `summarize()` call, which you will learn more about in the following lab. 
+To find the minimum and maximum values of columns, you can use the functions `min` and `max` within a `summarise()` call, which you will learn more about in the following lab. 
 Here's an example of how to find the minimum and maximum amount of boy births in a year:
 
 ```{r summarize min and max}
 arbuthnot %>%
-  summarize(min = min(boys), max = max(boys))
+  summarise(min = min(boys), max = max(boys))
 ```
 
 1.  What years are included in this data set? What are the dimensions of the 

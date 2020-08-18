@@ -213,17 +213,17 @@ You can also obtain numerical summaries for these flights:
 
 ```{r lax-flights-summ}
 lax_flights %>%
-  summarize(mean_dd   = mean(dep_delay), 
+  summarise(mean_dd   = mean(dep_delay), 
             median_dd = median(dep_delay), 
             n         = n())
 ```
 
-Note that in the `summarize` function you created a list of three different
+Note that in the `summarise` function you created a list of three different
 numerical summaries that you were interested in. The names of these elements are 
 user defined, like `mean_dd`, `median_dd`, `n`, and you can customize these names 
 as you like (just don't use spaces in your names). Calculating these summary 
 statistics also requires that you know the function calls. Note that `n()` reports
-the sample size.
+the sample size. Note you can also use `summarize()` instead of `summarise()` if you prefer that spelling.
 
 <div id="boxedtext">
 **Summary statistics: ** Some useful function calls for summary statistics for a 
@@ -268,7 +268,7 @@ the `group_by` function to get the same summary stats for each origin airport:
 ```{r summary-custom-list-origin}
 sfo_feb_flights %>%
   group_by(origin) %>%
-  summarize(median_dd = median(dep_delay), iqr_dd = IQR(dep_delay), n_flights = n())
+  summarise(median_dd = median(dep_delay), iqr_dd = IQR(dep_delay), n_flights = n())
 ```
 
 Here, we first grouped the data by `origin` and then calculated the summary 
@@ -288,13 +288,13 @@ Let's think about how you could answer this question:
 - First, calculate monthly averages for departure delays. With the new language
 you are learning, you could
     + `group_by` months, then
-    + `summarize` mean departure delays.
+    + `summarise` mean departure delays.
 - Then, you could to `arrange` these average delays in `desc`ending order
 
 ```{r mean-dep-delay-months}
 nycflights %>%
   group_by(month) %>%
-  summarize(mean_dd = mean(dep_delay)) %>%
+  summarise(mean_dd = mean(dep_delay)) %>%
   arrange(desc(mean_dd))
 ```
 
@@ -400,6 +400,7 @@ The `dplyr` package is full of [verbs](https://www.youtube.com/watch?v=tcC_Uue7u
 - `filter()`
 - `group_by()`
 - `mutate()`
+- `summarise()`
 
 The `ggplot2` package is full of geometries that we can use to display data. Write a question that could be answered by a plot that uses each of the following geometries.
 
