@@ -218,7 +218,7 @@ ggplot(data = dd, aes(x = p, y = me)) +
 You can investigate the interplay between $n$ and $p$ and the shape of the 
 sampling distribution by using simulations. The following function will help you
 investigate how the shape, center, and spread of the distribution of
-$\hat{p}$ changes as $n$ and $p$ changes. It is not crucial that you understand the innerworkings of the function. Just read the documentation (header in comments describing how to use the function) noting the inputs and outputs.
+$\hat{p}$ changes as $n$ and $p$ changes. It is not crucial that you understand the inner-workings of the function. Just read the documentation (header in comments describing how to use the function) noting the inputs and outputs. When we write functions it is helpful to also write documentation, or notes to the user, to help them understand what the function does and teach them how to use it.
 
 ```{r}
 # Simulate sampling distribution given sample size and proportion

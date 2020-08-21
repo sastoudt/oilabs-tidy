@@ -190,7 +190,13 @@ helpful to click the zoom button in the plot window.
 qqnormsim(sample = cal_fat, data = dairy_queen)
 ```
 
-It would be nice if these were all on the same plot to better judge whether our data fits within the simulated data. We repurpose some of the code that makes up the `qqnormsim` function. It is not crucial that you understand every line of this chunk; just focus on the resulting plot. 
+It would be nice if these were all on the same plot to better judge whether our data fits within the simulated data. We repurpose some of the code that makes up the `qqnormsim` function. To see the source code for a function (what's going on behind the scenes when you use a function), you just specify the name without any parentheses or arguments.
+
+```{r}
+qqnormsim
+```
+
+We'll grab the parts we need, and adjust the parts we want to change. It is common practice to build off of pre-existing code when we developm new functions. It is not crucial that you understand every line of this chunk; just focus on the resulting plot. 
 
 ```{r}
 y <- dairy_queen$cal_fat
