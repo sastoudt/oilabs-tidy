@@ -14,6 +14,19 @@ output:
 knitr::opts_chunk$set(eval = TRUE, results = FALSE, fig.show = "hide", message = FALSE)
 ```
 
+## Logistics
+
+This lab will occur remotely and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s). 
+
+For those participating syncronously I will be available in the main Zoom room to answer questions. If you have a question or technical problem, click the "Ask for Help" button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.  
+
+For those of you participating asynchronously, alert me to technical challengs over Slack DM, and I will get back to you as soon as possible. For questions about the content of the lab, please sign up for an office hour time block. 
+
+Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To do so, one of you can be the main recorder of answers in the lab document. It may be helpful to share your screen. You will be working with this same partner/group for the next lab, so you will switch roles next week. 
+
+
+You all should also feel free to ask and answer questions amongst yourselves via Zoom if participating synchronously or via Slack if participating asynchronously. Please note at the end of the lab document who you consulted for help.
+
 ## Getting Started
 
 ### Load packages
@@ -41,6 +54,12 @@ into a sample from the Youth Risk Behavior Surveillance System (YRBSS) survey,
 which uses data from high schoolers to help discover health patterns. The 
 dataset is called `yrbss`.
 
+```{r str}
+data(yrbss)
+glimpse(yrbss)
+```
+
+
 1.   What are the counts within each category for the amount of days these students
 have texted while driving within the past 30 days?
 
@@ -67,7 +86,7 @@ no_helmet <- no_helmet %>%
 ## Inference on proportions
 
 When summarizing the YRBSS, the Centers for Disease Control and Prevention seeks 
-insight into the population *parameters*. To do this, you can answer the question,
+insight into the population *parameters*. 
 "What proportion of people in your sample reported that they have texted while 
 driving each day for the past 30 days?" with a statistic; while the question 
 "What proportion of people on earth have texted while driving each day for the 
@@ -105,11 +124,23 @@ proportion.
 
 ## How does the proportion affect the margin of error?
 
-Imagine you've set out to survey 1000 people on two questions: are you at least
-6-feet tall? and are you left-handed? Since both of these sample proportions were 
+The margin of error is half the width of a confidence interval. Imagine you've set out to survey 1000 people in the US on two questions: are you at least
+5 feet tall? and are you left-handed? Since both of these sample proportions were 
 calculated from the same sample size, they should have the same margin of 
 error, right? Wrong! While the margin of error does change with sample size, 
-it is also affected by the proportion.
+it is also affected by the true proportion.
+
+About [10% of the population](https://psyarxiv.com/5gjac/) are left-handed, and a [rough guess-timate](https://www2.census.gov/library/publications/2010/compendia/statab/130ed/tables/11s0205.pdf) of the US population greater than 5 feet tall is about 90%.
+
+```{r}
+samp_handed =
+samp_height = 
+samp %>%
+  specify(response = climate_change_affects, success = "Yes") %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "prop") %>%
+  get_ci(level = 0.95)
+```
 
 Think back to the formula for the standard error: $SE = \sqrt{p(1-p)/n}$. This 
 is then used in the formula for the margin of error for a 95% confidence 
@@ -239,7 +270,20 @@ both variables within `specify`.
     *Hint:* Refer to your plot of the relationship between $p$ and margin of 
     error. This question does not require using a dataset.
 
+## Deliverables
+
+When you are finished editing your Markdown document click the "Knit" button and choose "Knit to HTML" in the top left corner of RStudio. This will run all of your code and create a formatted document of the output.  If you get an error, it means something in your Markdown file isn't right, either an error in code or some error in formatting. Call me into your breakout room, and we will troubleshoot.
+
+Submit your Markdown document and knitted file to [Moodle](https://moodle.smith.edu/) as:
+
+LastName-LastName-L-07.Rmd  (add a third last name if applicable)
+
+LastName-LastName-L-07.html
+
+*Due*: Monday, October 19th (beginning of class time, Eastern time)
+
+
 * * *
 
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a> and was adapted by Sara Stoudt.
 
