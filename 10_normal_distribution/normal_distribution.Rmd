@@ -43,7 +43,6 @@ Let's load the packages.
 ```{r load-packages, message=FALSE}
 library(tidyverse)
 library(openintro)
-library(ggformula)
 ```
 
 ### Creating a reproducible lab report
@@ -58,9 +57,8 @@ Let's take a quick peek at the first few rows of the data.
 
 Either you can use `glimpse` like before, or `head` to do this.
 
-```{r load-data, results=TRUE}
-library(tidyverse)
-library(openintro)
+```{r load-data, results=F}
+glimpse(fastfood)
 head(fastfood)
 ```
 
@@ -123,7 +121,7 @@ ggplot(data = dairy_queen, aes(x = cal_fat)) +
 
 After initializing a blank plot with `geom_blank()`, the `ggplot2` package (within
 the `tidyverse`) allows us to add additional layers. The first layer is a density 
-histogram. The second layer is a statistical function -- the density of the normal
+histogram. `..density..` is a special term that tells `ggplot` to calculate the density for the specified variable (here `cal_fat`) and use it to define the value on chosen axis. The second layer is a statistical function -- the density of the normal
 curve, `dnorm`. We specify that we want the curve to have the same mean and 
 standard deviation as the column of female heights. The argument `col` simply sets
 the color for the line to be drawn. If we left it out, the line would be drawn in
@@ -143,7 +141,7 @@ constructing a normal probability plot, also called a normal Q-Q plot for
 
 ```{r qq}
 ggplot(data = dairy_queen, aes(sample = cal_fat)) + 
-  geom_qq() + stat_qqline(alpha = 0.7, color = "red", linetype = "dashed")
+  geom_qq() + geom_qq_line(alpha = 0.7, color = "red", linetype = "dashed")
 ```
 
 This time, you can use the `geom_qq()` layer, while specifying that you will 
@@ -156,7 +154,7 @@ y-axis values correspond to the quantiles of the original unstandardized sample
 data. However, even if we were to standardize the sample data values, the Q-Q
 plot would look identical. A data set that is nearly normal will result in a
 probability plot where the points closely follow a diagonal line.  Any deviations
-from normality leads to deviations of these points from that line.  `stat_qqline()` provides a guide line to help you assess whether points deviate from a line.
+from normality leads to deviations of these points from that line.  `geom_qq_line()` provides a guide line to help you assess whether points deviate from a line.
 
 The plot for Dairy Queen's calories from fat shows points that tend to follow the
 line but with some errant points towards the upper tail.  You're left with the same
@@ -208,7 +206,7 @@ df <- data.frame(x = c(y, simnorm), plotnum = rep(c(
 
 original <- df %>% filter(plotnum == "data")
 df <- df %>% filter(plotnum != "data")
-ggplot(data = df, aes(sample = x, group = plotnum)) + stat_qq(alpha = 0.6) + stat_qq(data = original, aes(sample = x), col = "red", size = 2)
+ggplot(data = df, aes(sample = x, group = plotnum)) + geom_qq(alpha = 0.6) + geom_qq(data = original, aes(sample = x), col = "red", size = 2)
 ```
 
 4.  Does the normal probability plot for the calories from fat look similar to the plots 

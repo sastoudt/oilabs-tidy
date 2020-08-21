@@ -231,10 +231,10 @@ ggplot(data = m1, aes(x = .fitted, y = .resid)) +
 ```
 
 Notice here that `m1` can also serve as a data set because stored within it are 
-the fitted values ($\hat{y}$) and the residuals. Also note that we're getting 
+the fitted values ($\hat{y}$) and the residuals. (Don't worry too much about why they have a period in their names; this is just how those variables are named in the `m1` data structure. These variables will always be named `.fitted` and `.resid` if they are `lm` objects.) Also note that we're getting 
 fancy with the code here. After creating the scatterplot on the first layer 
 (first line of code), we overlay a horizontal dashed line at $y = 0$ (to help us
-check whether residuals are distributed around 0), and we also reanme the axis 
+check whether residuals are distributed around 0), and we also rename the axis 
 labels to be more informative.
 
 1.  Is there any apparent pattern in the residuals plot? What does this indicate
@@ -242,7 +242,15 @@ labels to be more informative.
 
 </br>
 
-**Nearly normal residuals**: To check this condition, we can look at a histogram
+**Nearly normal residuals**: To check this condition, we can look at a histogram. We'll learn more about the normal distribution in the next lab, but for now, here's what the shape of a normal distribution looks like.
+
+```{r}
+sim_norm <- data.frame(sim = rnorm(n = 100000, mean = 0, sd = 1))
+
+ggplot(data = sim_norm, aes(x = sim)) +
+        geom_histogram(aes(y = ..density..))
+```
+
 
 ```{r hist-res}
 ggplot(data = m1, aes(x = .resid)) +
@@ -250,11 +258,11 @@ ggplot(data = m1, aes(x = .resid)) +
   xlab("Residuals")
 ```
 
-or a normal probability plot of the residuals.
+We can also look at a normal probability plot of the residuals. We'll learn more about this plot in the next lab, but for now we want the points to roughly fall on the red line.
 
 ```{r qq-res}
 ggplot(data = m1, aes(sample = .resid)) +
-  stat_qq()
+geom_qq() + geom_qq_line(alpha = 0.7, color = "red", linetype = "dashed")
 ```
 
 Note that the syntax for making a normal probability plot is a bit different 
