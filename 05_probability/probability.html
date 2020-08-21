@@ -1705,7 +1705,7 @@ div.tocify {
 </div>
 </div>
 <div id="compared-to-what" class="section level2">
-<h2>Compared to What?</h2>
+<h2><a href="https://youtu.be/VF9-sEbqDvU?t=162">Compared to What?</a></h2>
 <p>We’ve shown that Kobe had some long shooting streaks, but are they long enough to support the belief that he had a hot hand? What can we compare them to?</p>
 <p>To answer these questions, let’s return to the idea of <em>independence</em>. Two processes are independent if the outcome of one process doesn’t effect the outcome of the second. If each shot that a player takes is an independent process, having made or missed your first shot will not affect the probability that you will make or miss your second shot.</p>
 <p>A shooter with a hot hand will have shots that are <em>not</em> independent of one another. Specifically, if the shooter makes his first shot, the hot hand model says he will have a <em>higher</em> probability of making his second shot.</p>
@@ -1733,18 +1733,18 @@ div.tocify {
 <p>Since there are only two elements in <code>coin_outcomes</code>, the probability that we “flip” a coin and it lands heads is 0.5. Say we’re trying to simulate an unfair coin that we know only lands heads 20% of the time. We can adjust for this by adding an argument called <code>prob</code>, which provides a vector of two probability weights.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">sim_unfair_coin &lt;-<span class="st"> </span><span class="kw">sample</span>(coin_outcomes, <span class="dt">size =</span> <span class="dv">100</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>, </a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">                          <span class="dt">prob =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.8</span>))</a></code></pre></div>
-<p><code>prob=c(0.2, 0.8)</code> indicates that for the two elements in the <code>outcomes</code> vector, we want to select the first one, <code>heads</code>, with probability 0.2 and the second one, <code>tails</code> with probability 0.8. Another way of thinking about this is to think of the outcome space as a bag of 10 chips, where 2 chips are labeled “head” and 8 chips “tail”. Therefore at each draw, the probability of drawing a chip that says “head”&quot; is 20%, and “tail” is 80%.</p>
+<p><code>prob=c(0.2, 0.8)</code> indicates that for the two elements in the <code>outcomes</code> vector, we want to select the first one, <code>heads</code>, with probability 0.2 and the second one, <code>tails</code> with probability 0.8. In previous examples we have actually genreated the outcome space and sampled directly from it rather than specifying probabilities (like we have a bag of 10 chips, where 2 chips are labeled “head” and 8 chips “tail”). In either approach, at each draw, the probability of drawing a chip that says “head”&quot; is 20%, and “tail” is 80%.</p>
+<p>Another way to think about it is that we’ve shrunken the size of the slip of paper that says “heads”, making it less likely to be drawn, and we’ve increased the size of the slip of paper saying “tails”, making it more likely to be drawn. When you simulated the fair coin, both slips of paper were the same size. This happens by default if you don’t provide a <code>prob</code> argument; all elements in the <code>outcomes</code> vector have an equal probability of being drawn.</p>
+<p>If you want to learn more about <code>sample</code> or any other function, recall that you can always check out its help file.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">?sample</a></code></pre></div>
+<div id="boxedtext">
+<p><strong>A note on setting a seed:</strong> Remember that setting a seed will cause R to select the same sample each time you knit your document. This will make sure your results don’t change each time you knit, and it will also ensure reproducibility of your work (by setting the same seed it will be possible to reproduce your results). You can set a seed like this:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">35797</span>)                 <span class="co"># make sure to change the seed</span></a></code></pre></div>
+<p>The number above is completely arbitraty. If you need inspiration, I use the numbers in the date and time (but dropping any zeros). The important thing is that you use each seed only once in a document. Remember to do this <strong>before</strong> you sample in the exercises.</p>
+</div>
 <ol style="list-style-type: decimal">
 <li>In your simulation of flipping the unfair coin 100 times, how many flips came up heads? Include the code for sampling the unfair coin in your response. Since the markdown file will run the code, and generate a new sample each time you <em>Knit</em> it, you should also “set a seed” <strong>before</strong> you sample. Read more about setting a seed below.</li>
 </ol>
-<div id="boxedtext">
-<p><strong>A note on setting a seed:</strong> Setting a seed will cause R to select the same sample each time you knit your document. This will make sure your results don’t change each time you knit, and it will also ensure reproducibility of your work (by setting the same seed it will be possible to reproduce your results). You can set a seed like this:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">35797</span>)                 <span class="co"># make sure to change the seed</span></a></code></pre></div>
-<p>The number above is completely arbitraty. If you need inspiration, you can use your ID, birthday, or just a random string of numbers. The important thing is that you use each seed only once in a document. Remember to do this <strong>before</strong> you sample in the exercise above.</p>
-</div>
-<p>In a sense, we’ve shrunken the size of the slip of paper that says “heads”, making it less likely to be drawn, and we’ve increased the size of the slip of paper saying “tails”, making it more likely to be drawn. When you simulated the fair coin, both slips of paper were the same size. This happens by default if you don’t provide a <code>prob</code> argument; all elements in the <code>outcomes</code> vector have an equal probability of being drawn.</p>
-<p>If you want to learn more about <code>sample</code> or any other function, recall that you can always check out its help file.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">?sample</a></code></pre></div>
 </div>
 <div id="simulating-the-independent-shooter" class="section level2">
 <h2>Simulating the Independent Shooter</h2>

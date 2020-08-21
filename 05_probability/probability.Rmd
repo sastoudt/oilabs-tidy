@@ -122,7 +122,7 @@ ggplot(data = kobe_streak, aes(x = length)) +
     What was his typical streak length? How long was his longest streak of 
     baskets? Make sure to include the accompanying plot in your answer.
 
-## Compared to What?
+## [Compared to What?](https://youtu.be/VF9-sEbqDvU?t=162)
 
 We've shown that Kobe had some long shooting streaks, but are they long enough 
 to support the belief that he had a hot hand? What can we compare them to?
@@ -215,32 +215,11 @@ sim_unfair_coin <- sample(coin_outcomes, size = 100, replace = TRUE,
 
 `prob=c(0.2, 0.8)` indicates that for the two elements in the `outcomes` vector,
 we want to select the first one, `heads`, with probability 0.2 and the second 
-one, `tails` with probability 0.8. Another way of thinking about this is to 
-think of the outcome space as a bag of 10 chips, where 2 chips are labeled 
-"head" and 8 chips "tail". Therefore at each draw, the probability of drawing a 
+one, `tails` with probability 0.8. In previous examples we have actually genreated the outcome space and sampled directly from it rather than specifying probabilities (like we have a bag of 10 chips, where 2 chips are labeled 
+"head" and 8 chips "tail"). In either approach, at each draw, the probability of drawing a 
 chip that says "head"" is 20%, and "tail" is 80%.
 
-1.  In your simulation of flipping the unfair coin 100 times, how many flips 
-    came up heads? Include the code for sampling the unfair coin in your response.
-    Since the markdown file will run the code, and generate a new sample each time
-    you *Knit* it, you should also "set a seed" **before** you sample. Read more 
-    about setting a seed below.
-    
-<div id="boxedtext">
-**A note on setting a seed:** Remember that setting a seed will cause R to select the same 
-sample each time you knit your document. This will make sure your results don't
-change each time you knit, and it will also ensure reproducibility of your work 
-(by setting the same seed it will be possible to reproduce your results). You can
-set a seed like this:
-```{r set-seed}
-set.seed(35797)                 # make sure to change the seed
-```
-The number above is completely arbitraty. If you need inspiration, I use the numbers in the date and time (but dropping any zeros). The important thing is that you
-use each seed only once in a document. Remember to do this **before** you sample
-in the exercise above.
-</div>
-
-In a sense, we've shrunken the size of the slip of paper that says "heads", 
+Another way to think about it is that we've shrunken the size of the slip of paper that says "heads", 
 making it less likely to be drawn, and we've increased the size of the slip of 
 paper saying "tails", making it more likely to be drawn. When you simulated the 
 fair coin, both slips of paper were the same size. This happens by default if 
@@ -253,6 +232,30 @@ can always check out its help file.
 ```{r help-sample,tidy = FALSE}
 ?sample
 ```
+
+
+<div id="boxedtext">
+**A note on setting a seed:** Remember that setting a seed will cause R to select the same 
+sample each time you knit your document. This will make sure your results don't
+change each time you knit, and it will also ensure reproducibility of your work 
+(by setting the same seed it will be possible to reproduce your results). You can
+set a seed like this:
+```{r set-seed}
+set.seed(35797)                 # make sure to change the seed
+```
+The number above is completely arbitraty. If you need inspiration, I use the numbers in the date and time (but dropping any zeros). The important thing is that you
+use each seed only once in a document. Remember to do this **before** you sample
+in the exercises.
+</div>
+
+1.  In your simulation of flipping the unfair coin 100 times, how many flips 
+    came up heads? Include the code for sampling the unfair coin in your response.
+    Since the markdown file will run the code, and generate a new sample each time
+    you *Knit* it, you should also "set a seed" **before** you sample. Read more 
+    about setting a seed below.
+    
+
+
 
 ## Simulating the Independent Shooter
 
