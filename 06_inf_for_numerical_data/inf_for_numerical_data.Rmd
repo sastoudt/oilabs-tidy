@@ -13,6 +13,19 @@ output:
 knitr::opts_chunk$set(eval = TRUE, results = FALSE, fig.show = "hide", message = FALSE)
 ```
 
+## Logistics
+
+This lab will occur remotely and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s). 
+
+For those participating syncronously I will be available in the main Zoom room to answer questions. If you have a question or technical problem, click the "Ask for Help" button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.  
+
+For those of you participating asynchronously, alert me to technical challengs over Slack DM, and I will get back to you as soon as possible. For questions about the content of the lab, please sign up for an office hour time block. 
+
+Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To do so, whoever was *not* the main recorder last week should be the main recorder of answers in the lab document this week. It may be helpful to share your screen. 
+
+You all should also feel free to ask and answer questions amongst yourselves via Zoom if participating synchronously or via Slack if participating asynchronously. Please note at the end of the lab document who you consulted for help.
+
+
 ## Getting Started
 
 ### Load packages
@@ -150,17 +163,19 @@ In one sample cases, the `null` argument can be set to "point" to test a hypothe
 relative to a point estimate.
 
 Also, note that the `type` argument within `generate` is set to `permute`, which 
-is the argument when generating a null distribution for a hypothesis test.
+is the argument when generating a null distribution for a hypothesis test. This will shuffle the labels of "yes" and "no".
 
 We can visualize this null distribution with the following code:
 
 ```{r}
+names(null_dist)
+
 ggplot(data = null_dist, aes(x = stat)) +
   geom_histogram()
 ```
 
 
-1. How many of these `null` permutations have a difference of at least `obs_stat`?
+1. How many of these `null` permutations have a difference of at least `obs_diff`?
 
 Now that the test is initialized and the null distribution formed, you can calculate
 the p-value for your hypothesis test using the function `get_p_value`.
@@ -199,6 +214,20 @@ a hypothesis test and/or a confidence interval. Report the statistical results,
 and also provide an explanation in plain language. Be sure to check all 
 assumptions, state your $\alpha$ level, and conclude in context.
 
+## Deliverables
+
+When you are finished editing your Markdown document click the "Knit" button and choose "Knit to HTML" in the top left corner of RStudio. This will run all of your code and create a formatted document of the output. You may notice that it takes longer to knit this lab than previous ones. This is because the bootstrap procedure takes more computational time for this example.  If you get an error, it means something in your Markdown file isn't right, either an error in code or some error in formatting. Call me into your breakout room, and we will troubleshoot.
+
+Submit your Markdown document and knitted file to [Moodle](https://moodle.smith.edu/) as:
+
+LastName-LastName-L-06.Rmd  (add a third last name if applicable)
+
+LastName-LastName-L-06.html
+
+*Due*: Wednesday, October 14th [because of Fall Break, but feel free to turn it in early] (beginning of class time, Eastern time)
+
+
+
 * * *
 
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a> and was adapted by Sara Stoudt.
