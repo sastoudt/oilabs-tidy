@@ -216,7 +216,9 @@ Next, you will review how this set of code works.
 
 The idea behind the `rep_sample_n` function is *repetition*. 
 Earlier, you took a single sample of size `n` (50) from the population of all people in the population. 
-With this new function, you can repeat this sampling procedure `rep` times in order to build a distribution of a series of sample statistics, which is called the **sampling distribution**. For some [context](https://github.com/tidymodels/infer/issues/337) on the function naming: `slice_sample` took over for an older function `sample_n`.
+With this new function, you can repeat this sampling procedure `rep` times in order to build a distribution of a series of sample statistics, which is called the **sampling distribution**. 
+
+For some insight into how functions and names change over time, here is some [context](https://github.com/tidymodels/infer/issues/337) on the function naming. `slice_sample()` took over for an older function `sample_n()`. In the next update of the `infer` package, `rep_sample_n()` will become `rep_slice_sample()`.
 
 Note that in practice one rarely gets to build true sampling distributions, because one rarely has access to data from the entire population. 
 
