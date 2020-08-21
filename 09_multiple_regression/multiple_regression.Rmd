@@ -11,6 +11,19 @@ output:
 knitr::opts_chunk$set(eval = TRUE, results = FALSE, fig.show = "hide", message = FALSE)
 ```
 
+## Logistics
+
+This lab will occur remotely and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s). 
+
+For those participating syncronously I will be available in the main Zoom room to answer questions. If you have a question or technical problem, click the "Ask for Help" button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.  
+
+For those of you participating asynchronously, alert me to technical challengs over Slack DM, and I will get back to you as soon as possible. For questions about the content of the lab, please sign up for an office hour time block. 
+
+Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To do so, one of you can be the main recorder of answers in the lab document. It may be helpful to share your screen. You will be working with this same partner/group for the next lab, so you will switch roles next week. 
+
+You all should also feel free to ask and answer questions amongst yourselves via Zoom if participating synchronously or via Slack if participating asynchronously. Please note at the end of the lab document who you consulted for help.
+
+
 ## Grading the professor
 
 Many college courses conclude by giving students the opportunity to evaluate 
@@ -96,7 +109,7 @@ Before you draw conclusions about the trend, compare the number of observations
 in the data frame with the approximate number of points on the scatterplot. 
 Is anything awry?
 
-4.  Replot the scatterplot, but this time use `geom_jitter` as your layer. What 
+4.  Replot the scatterplot, but this time use `geom_jitter` as your layer to help us with potential overplotting (where multiple points cover one another, but we only see one). What 
     was misleading about the initial scatterplot?
 
 ```{r scatter-score-bty_avg-jitter}
@@ -159,7 +172,7 @@ evals %>%
 ```
 
 These variables are collinear (correlated), and adding more than one of these 
-variables to the model would not add much value to the model. In this 
+variables to the model would not add much value to the model. This is because *given* information about one of the variables, the other one doesn't add much new information. In this 
 application and with these highly-correlated predictors, it is reasonable to use
 the average beauty score as the single representative of these variables.
 
@@ -253,36 +266,42 @@ summary(m_full)
 
 13. Interpret the coefficient associated with the ethnicity variable.
 
-14. Drop the variable with the highest p-value and re-fit the model. Did the
+14. Verify that the conditions for this model are reasonable using diagnostic 
+    plots.
+    
+15. Drop the variable with the highest p-value and re-fit the model. Did the
     coefficients and significance of the other explanatory variables change?
     (One of the things that makes multiple regression interesting is that
     coefficient estimates depend on the other variables that are included in
     the model.) If not, what does this say about whether or not the dropped
     variable was collinear with the other explanatory variables?
 
-15. Using backward-selection and p-value as the selection criterion,
-    determine the best model. You do not need to show all steps in your
-    answer, just the output for the final model. Also, write out the linear
-    model for predicting score based on the final model you settle on.
-
-16. Verify that the conditions for this model are reasonable using diagnostic 
-    plots.
-
-17. The original paper describes how these data were gathered by taking a
+16. The original paper describes how these data were gathered by taking a
     sample of professors from the University of Texas at Austin and including 
     all courses that they have taught. Considering that each row represents a 
     course, could this new information have an impact on any of the conditions 
     of linear regression?
 
-18. Based on your final model, describe the characteristics of a professor and 
+17. Based on the `m_full` model, describe the characteristics of a professor and 
     course at University of Texas at Austin that would be associated with a high
     evaluation score.
 
-19. Would you be comfortable generalizing your conclusions to apply to professors
+18. Would you be comfortable generalizing your conclusions to apply to professors
     generally (at any university)? Why or why not?
 
-## References
+## Deliverables
+
+When you are finished editing your Markdown document click the "Knit" button and choose "Knit to HTML" in the top left corner of RStudio. This will run all of your code and create a formatted document of the output.  If you get an error, it means something in your Markdown file isn't right, either an error in code or some error in formatting. Call me into your breakout room, and we will troubleshoot.
+
+Submit your Markdown document and knitted file to [Moodle](https://moodle.smith.edu/) as:
+
+LastName-LastName-L-08.Rmd  (add a third last name if applicable)
+
+LastName-LastName-L-08.html
+
+*Due*: Monday, November 2nd (beginning of class time, Eastern time)
+
 
 * * *
 
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a> and was adapted by Sara Stoudt.
