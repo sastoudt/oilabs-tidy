@@ -192,6 +192,25 @@ helpful to click the zoom button in the plot window.
 qqnormsim(sample = cal_fat, data = dairy_queen)
 ```
 
+It would be nice if these were all on the same plot to better judge whether our data fits within the simulated data. We repurpose some of the code that makes up the `qqnormsim` function. It is not crucial that you understand every line of this chunk; just focus on the resulting plot. 
+
+```{r}
+y <- dairy_queen$cal_fat
+simnorm <- rnorm(
+  n = length(y) * 8, mean = mean(y),
+  sd = sd(y)
+)
+df <- data.frame(x = c(y, simnorm), plotnum = rep(c(
+  "data",
+  "sim 1", "sim 2", "sim 3", "sim 4", "sim 5", "sim 6",
+  "sim 7", "sim 8"
+), each = length(y)))
+
+original <- df %>% filter(plotnum == "data")
+df <- df %>% filter(plotnum != "data")
+ggplot(data = df, aes(sample = x, group = plotnum)) + stat_qq(alpha = 0.6) + stat_qq(data = original, aes(sample = x), col = "red", size = 2)
+```
+
 4.  Does the normal probability plot for the calories from fat look similar to the plots 
     created for the simulated data?  That is, do the plots provide evidence that the
     female heights are nearly normal?
