@@ -39,7 +39,7 @@ Go ahead and launch Smith's RStudio Server [here](https://rstudio.smith.edu/). Y
 You should see a window that looks like the image shown below.
 
 ```{r r-server-interface-2020, echo=FALSE, results="asis"}
-knitr::include_graphics("img/r-interface-2020.png") ## note change when I can get a screenshot
+knitr::include_graphics("img/r-server.png") 
 ```
 
 If you cannot access the server, call me into your breakout room.
@@ -67,12 +67,13 @@ For this lab, and many others in the future, we will use the following R package
 If these packages are not already available in your R environment, install them by typing the following three lines of code into the console of your RStudio session, pressing the enter/return key after each one. 
 Note that you can check to see which packages (and which versions) are installed by inspecting the *Packages* tab in the lower right panel of RStudio. 
 
+These packages will be installed on the server, but later on when you install R and RStudio on your own computer, you will need to install them yourself. You may need to select a server from which to download; any of them will work.
+
 ```{r install-packages, message=FALSE, eval=FALSE}
 install.packages("tidyverse")
 install.packages("openintro")
 ```
 
-You may need to select a server from which to download; any of them will work.
 Next, you need to load these packages in your working environment. 
 We do this with the `library` function. Run the following three lines in your console.
 
@@ -89,7 +90,7 @@ You can find more about the packages in the tidyverse at [tidyverse.org](http://
 
 ### Creating a reproducible lab report
 
-We will be using R Markdown to create reproducible lab reports. See the following videos describing why and how:
+We will be using R Markdown to create reproducible lab reports. See the following videos describing why and how. Note they will refer to the `oilabs` package. This has been renamed the `openintro` packge.
 
 [**Why use R Markdown for Lab Reports?**](https://youtu.be/lNWVQ2oxNho)
 <iframe width="560" height="315" src="https://www.youtube.com/embed/lNWVQ2oxNho" frameborder="0" allowfullscreen></iframe>
@@ -97,7 +98,7 @@ We will be using R Markdown to create reproducible lab reports. See the followin
 [**Using R Markdown for Lab Reports in RStudio**](https://youtu.be/o0h-eVABe9M)
 <iframe width="560" height="315" src="https://www.youtube.com/embed/o0h-eVABe9M" frameborder="0" allowfullscreen></iframe>
 
-In a nuthshell, in RStudio, go to New File -> R Markdown... Then, choose From Template and then choose `Lab Report for OpenIntro Statistics Lab 1` from the list of templates.
+In a nutshell, in RStudio, go to New File -> R Markdown... Then, choose From Template and then choose `Lab Report for OpenIntro Statistics Lab 1` from the list of templates.
 
 Going forward you should refrain from typing your code directly in the console, and instead type any code (final correct answer, or anything you're just trying out) in the R Markdown file and run the chunk using either the Run button on the chunk  (green sideways triangle) or by highlighting the code and clicking Run on the top  right corner of the R Markdown editor. 
 If at any point you need to start over, you  can Run All Chunks above the chunk you're working in by clicking on the down arrow in the code chunk.
@@ -197,7 +198,7 @@ ggplot(data = arbuthnot, aes(x = year, y = girls)) +
 
 
 We use the `ggplot()` function to build plots. 
-If you run the plotting code in your console, you should see the plot appear under the *Plots* tab of the lower right panel of RStudio. 
+If you run the plotting code in your console, you should see the plot appear under the *Plots* tab of the lower right panel of RStudio. If you run the chunk, the plot will appear beneath the code chunk.
 Notice that the command above again looks like a function, this time with arguments separated by commas. 
 
 With `ggplot()`:
@@ -300,7 +301,7 @@ ggplot(data = arbuthnot, aes(x = year, y = total)) +
   geom_line()
 ```
 
-Similarly to you we computed the total number of births, you can compute the ratio of the number of boys to the number of girls baptized in 1629 with
+Just as you computed the total number of births, you can compute the ratio of the number of boys to the number of girls baptized in 1629 with
 
 ```{r calc-prop-boys-to-girls-numbers}
 5218 / 4683
