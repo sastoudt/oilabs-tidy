@@ -53,7 +53,9 @@ library(openintro)
 ### Creating a reproducible lab report
 
 Remember that we will be using R Markdown to create reproducible lab reports. 
-In RStudio, go to New File -> R Markdown... Then, choose From Template and then choose `Lab Report for OpenIntro Statistics Labs` from the list of templates.
+In RStudio, go to New File -> R Markdown... Then, choose From Template and then choose `Lab Report` (not the specific one we used for Lab 1) from the list of templates. Make sure to name the document appropriately and pick a location for the file where you know how to find it on your computer.
+
+![](img/template-setup.png){width=60%}
 
 See the following video describing how to get started with creating these 
 reports for this lab, and all future labs:
@@ -253,12 +255,14 @@ Note that you can separate the conditions using commas (or "&") if you want flig
 are both headed to SFO **and** in February. If you are interested in either
 flights headed to SFO **or** in February, you can use the `|` instead of the comma. (This is located above the backslash.)
 
+Note: as you complete these exercises remember to give each code chunk a unique name in your lab report.
+
 1.  Create a new data frame that includes flights headed to SFO in February, 
     and save this data frame as `sfo_feb_flights`. How many flights 
     meet these criteria? 
     
 1.  Describe the distribution of the **arrival** delays of these flights using a 
-    histogram and appropriate summary statistics. **Hint:** The summary 
+    histogram and appropriate summary statistics. Choose a bandwidth that reveals the features of this distribution **Hint:** The summary 
     statistics you use should depend on the shape of the distribution.
     
 Another useful technique is quickly calculating summary statistics for various 
@@ -353,7 +357,7 @@ nycflights %>%
   arrange(desc(ot_dep_rate))
 ```
 
-1.  If you were selecting an airport simply based on on time departure 
+1.  If you were selecting an airport simply based on the on time departure 
     percentage, which NYC airport would you choose to fly out of?
 
 You can also visualize the distribution of on on time departure rate across 
@@ -394,7 +398,7 @@ You may want to refer to the [ggplot cheatsheet](https://rstudio.com/wp-content/
 
 ## Let's Recap
 
-The `dplyr` package is full of [verbs](https://www.youtube.com/watch?v=tcC_Uue7uaQ) that we can use to organize data. Write a question that could be answered using each of the following functions.
+1. The `dplyr` package is full of [verbs](https://www.youtube.com/watch?v=tcC_Uue7uaQ) that we can use to organize data. Write a question about the flights dataset that could be answered using each of the following functions.
 
 - `arrange()`
 - `filter()`
@@ -402,7 +406,7 @@ The `dplyr` package is full of [verbs](https://www.youtube.com/watch?v=tcC_Uue7u
 - `mutate()`
 - `summarise()`
 
-The `ggplot2` package is full of geometries that we can use to display data. Write a question that could be answered by a plot that uses each of the following geometries.
+1. The `ggplot2` package is full of geometries that we can use to display data. Write a question about the flights dataset that could be answered by a plot that uses each of the following geometries.
 
 - `geom_bar()`
 - `geom_hist()`
