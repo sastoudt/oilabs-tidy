@@ -138,7 +138,7 @@ Working with these 50 names is considerably simpler than working with all 100,00
 
 If you're interested in estimating the proportion of all people who do not believe that the work scientists do benefits them, but you do not have access to the population data, your best single guess is the sample mean.
 
-```{r phat-samp1}
+```{r phat-samp1, results = TRUE}
 samp1 %>%
   count(scientist_work) %>%
   mutate(p_hat = n /sum(n))
@@ -158,10 +158,6 @@ Depending on which 50 people you selected, your estimate could be a bit above
 or a bit below the true population proportion of `r samp1_p_hat`. 
 In general, though, the sample proportion turns out to be a pretty good estimate of the true population proportion, and you were able to get it by sampling less than 1% of the population.
 
-1.  Would you expect the sample proportion to match the sample proportion of 
-    another student's sample? Why, or why not? If the answer is no, would you 
-    expect the proportions to be somewhat different or very different? Ask a 
-    student team to confirm your answer.
 
 1.  Take a second sample, also of size 50, and call it `samp2`. How does the 
     sample proportion of `samp2` compare with that of `samp1`? Suppose we took two 
@@ -175,7 +171,7 @@ In this lab, because you have access to the population, you can build up the sam
 Here, we use R to take 15,000 different samples of size 50 from the population, calculate the proportion of responses in each sample, filter for only the *Doesn't benefit* responses, and store each result in a vector called `sample_props50`. 
 Note that we specify that `replace = TRUE` since sampling distributions are constructed by sampling with replacement.
 
-```{r iterate}
+```{r iterate , results = TRUE}
 sample_props50 <- global_monitor %>%
                     rep_sample_n(size = 50, reps = 15000, replace = TRUE) %>%
                     count(scientist_work) 
@@ -195,7 +191,7 @@ head(sample_props50)
 
 And we can visualize the distribution of these proportions with a histogram.
 
-```{r fig.show="hide"}
+```{r fig.show=T}
 ggplot(data = sample_props50, aes(x = p_hat)) +
   geom_histogram(binwidth = 0.02) +
   labs(
@@ -203,14 +199,13 @@ ggplot(data = sample_props50, aes(x = p_hat)) +
     title = "Sampling distribution of p_hat",
     subtitle = "Sample size = 50, Number of samples = 15000"
   )
+
 ```
 
+```{r, results = TRUE}
+dim(sample_props50)
+```
 
-Next, you will review how this set of code works.
-
-1.  How many elements are there in `sample_props50`?  Describe the sampling 
-    distribution, and be sure to specifically note its center. Make sure to include 
-    a plot of the distribution in your answer.
 
 ## Interlude: Sampling distributions
 
@@ -225,7 +220,7 @@ Note that in practice one rarely gets to build true sampling distributions, beca
 Without the `rep_sample_n` function, this would be painful. 
 We would have to manually run the following code 15,000 times 
 
-```{r sample-code}
+```{r sample-code,results= T}
 global_monitor %>%
   slice_sample(n = 50, replace = TRUE) %>%
   count(scientist_work) %>%
@@ -248,7 +243,7 @@ Note that for each of the 15,000 times we computed a proportion, we did so from 
 
 Mechanics aside, let's return to the reason we used the `rep_sample_n` function: to compute a sampling distribution, specifically, the sampling distribution of the proportions from samples of 50 people. 
 
-```{r hist, fig.show='hide'}
+```{r hist,fig.show=T}
 ggplot(data = sample_props50, aes(x = p_hat)) +
   geom_histogram(binwidth = 0.02)
 ```
@@ -375,15 +370,6 @@ You are welcome to use the app for exploration.
     Using this sample, what is your best point estimate of the population proportion 
     of people who think the work scientists do enchances their lives?
 
-1.  Since you have access to the population, simulate the sampling 
-    distribution of proportion of those who think the work scientists do enchances 
-    their lives for samples of size 15 by taking 2000 samples from the population 
-    of size 15 and computing 2000 sample proportions. Store these proportions in 
-    as `sample_props15`. Plot the data, then describe the shape of this sampling 
-    distribution. Based on this sampling distribution, what would you guess the 
-    true proportion of those who think the work scientists do enchances their lives 
-    to be? Finally, calculate and report the population proportion.
-
 1.  Change your sample size from 15 to 150, then compute the sampling 
     distribution using the same method as above, and store these proportions in a 
     new object called `sample_props150`. Describe the shape of this sampling 
@@ -391,10 +377,6 @@ You are welcome to use the app for exploration.
     size of 15. Based on this sampling distribution, what would you guess to 
     be the true proportion of those who think the work scientists do enchances 
     their lives?
-
-1.  Of the sampling distributions from 2 and 3, which has a smaller spread?  If
-    you're concerned with making estimates that are more often close to the 
-    true value, would you prefer a sampling distribution with a large or small spread?
     
 ## Deliverables
 
