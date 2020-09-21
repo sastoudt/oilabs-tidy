@@ -1,6 +1,5 @@
 ---
 title: 'Foundations for statistical inference - Confidence intervals'
-runtime: shiny
 output:
   html_document:
     theme: cerulean
@@ -11,7 +10,7 @@ output:
 ---
 
 ```{r global_options, include=FALSE}
-knitr::opts_chunk$set(eval = TRUE, results = FALSE, fig.show = "hide", message = FALSE)
+knitr::opts_chunk$set(eval = TRUE, message = FALSE)
 ```
 
 ## Logistics
@@ -114,13 +113,13 @@ samp <- us_adults %>%
   slice_sample(n = n)
 ```
 
-1.  What percent of the adults in your sample think climate change affects their 
-    local community? **Hint:** Just like we did with the population, we can calculate 
-    the proportion of those **in this sample** who think climate change affects their 
-    local community.
+### Exercise 1
 
-2.  Would you expect another student's sample proportion to be identical to yours? 
-    Would you expect it to be similar? Why or why not?
+What percent of the adults in your sample think climate change affects their 
+local community? **Hint:** Just like we did with the population, we can calculate 
+the proportion of those **in this sample** who think climate change affects their 
+local community.
+
 
 
 ## Confidence intervals
@@ -176,17 +175,26 @@ To recap: even though we don't know what the full population looks like, we're 9
 
 ## Confidence levels
 
-3.  In the interpretation above, we used the phrase "95% confident". What does "95% confidence" mean?
-
 In this case, you have the rare luxury of knowing the true population proportion (62%) since you have data on the entire population. 
 
-4.  Does your confidence interval capture the true population proportion of US adults 
-    who think climate change affects their local community? If you are working on this 
-    lab in a classroom, does your neighbor's interval capture this value? 
+### Exercise 2
 
-5.  Each student should have gotten a slightly different confidence interval. What 
+Each student should have gotten a slightly different confidence interval. What 
     proportion of those intervals would you expect to capture the true population 
     mean? Why?
+    
+### Exercise 3
+
+Following the example from code chunk `confidence interval infer` and data from the one sample you have 
+    (`samp`), find a confidence interval for the proportion of US Adults who think climate change is affecting their local community with a confidence level of your choosing (other than 95%) and interpret it.
+    
+### Exercise 4
+
+Repeat the code found in code chunk `confidence interval infer` but change bootstrap samples from 1000 to 500 and then again to 100. How does the width of the interval change 
+    as you decrease the number of bootstrap samples? Does changing the 
+    number of bootstap samples affect the standard error?
+
+## Getting Fancy
 
 In the next part of the lab, you will collect many samples to learn more about how sample proportions and confidence intervals constructed based on those samples vary from one sample to another.
 
@@ -194,10 +202,28 @@ In the next part of the lab, you will collect many samples to learn more about h
 -   Calculate the sample proportion, and use these to calculate and store the lower and upper bounds of the confidence intervals.
 -   Repeat these steps 50 times.
 
-Doing this would require learning programming concepts like iteration so that you can automate repeating running the code you've developed so far many times to obtain many (50) confidence intervals. 
-In order to keep the programming simpler, we are providing the interactive app below that basically does this for you and created a plot similar to Figure 5.6 on [OpenIntro Statistics, 4th Edition (page 182)](https://www.openintro.org/os).
+Doing this would require learning programming concepts like iteration so that you can automate repeating running the code you've developed so far many times to obtain many (50) confidence intervals. In order to keep the programming simpler, we are providing code that does this for you. You just need to specify parameters.
 
-```{r shiny, echo=FALSE, eval=TRUE, results = TRUE}
+### Exercise 4
+
+Choose a confidence level. Then given a sample size of 60, 1000 bootstrap samples for each interval, and 50 
+    confidence intervals constructed as inputs, use the code below to determine what 
+    proportion of your confidence intervals include the true population proportion. 
+    Is this proportion exactly equal to the confidence level? If not, explain why. 
+
+```{r}
+## change these parameters
+
+n_samp = 50 ## change to sample size for each resample
+n_rep = 1000 ## change to how many resamples you want in each bootstrap
+n_ci = 5 ## change to how many confidence intervals you want
+conf_level = 0.8 ## confidence level (as decimal)
+```
+
+```{r, echo=FALSE}
+p <- 0.62 ## population parameter for "Yes"
+
+## run this chunk without changing anything, you don't have to understand the code in this chunk
 store_ci <- function(i, n, reps, conf_level, success) {
   us_adults %>%
     sample_n(size = n) %>%
@@ -210,138 +236,33 @@ store_ci <- function(i, n, reps, conf_level, success) {
       x_upper = names(.)[2]
     )
 }
-
-shinyApp(
-  ui <- fluidPage(
-    h4("Confidence intervals for the proportion of US adults who think 
-     climate change"),
-
-    h4(selectInput("success", "",
-      choices = c(
-        "is affecting their local community" = "Yes",
-        "is not affecting their local community" = "No"
-      ),
-      selected = "Yes", width = "50%"
-    )),
-
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-      sidebarPanel(
-        numericInput("n_samp",
-          "Sample size for a single sample from the population:",
-          min = 1,
-          max = 1000,
-          value = 60
-        ),
-
-        hr(),
-
-        numericInput("n_rep",
-          "Number of resamples for each bootstrap confidence interval:",
-          min = 1,
-          max = 15000,
-          value = 1000
-        ),
-
-        numericInput("conf_level",
-          "Confidence level",
-          min = 0.01,
-          max = 0.99,
-          value = 0.95,
-          step = 0.05
-        ),
-
-        hr(),
-
-        radioButtons("n_ci",
-          "Number of confidence intervals:",
-          choices = c(10, 25, 50, 100),
-          selected = 50, inline = TRUE
-        ),
-
-        actionButton("go", "Go")
-      ),
-
-      # Show a plot of the generated distribution
-      mainPanel(
-        plotOutput("ci_plot")
-      )
-    )
-  ),
-
-  server <- function(input, output) {
-
-    # set true p
-    p <- reactive(ifelse(input$success == "Yes", 0.62, 0.38))
-
-    # create df_ci when go button is pushed
-    df_ci <- eventReactive(input$go, {
-      map_dfr(1:input$n_ci, store_ci,
-        n = input$n_samp,
-        reps = input$n_rep, conf_level = input$conf_level,
-        success = input$success
+   toPlot =   map_dfr(1:n_ci, store_ci,
+        n = n_samp,
+        reps = n_rep, conf_level = conf_level,
+        success = "Yes"
       ) %>%
         mutate(
-          y_lower = 1:input$n_ci,
-          y_upper = 1:input$n_ci,
-          capture_p = ifelse(x_lower < p() & x_upper > p(), "Yes", "No")
+          y_lower = 1:n_ci,
+          y_upper = 1:n_ci,
+          capture_p = ifelse(x_lower < p & x_upper > p, "Yes", "No")
         )
-    })
 
-    # plot df_ci
-    output$ci_plot <- renderPlot({
-      ggplot(df_ci()) +
+
+      ggplot(toPlot) +
         geom_segment(aes(x = x_lower, y = y_lower, xend = x_upper, yend = y_upper, color = capture_p)) +
         geom_point(aes(x = x_lower, y = y_lower, color = capture_p)) +
         geom_point(aes(x = x_upper, y = y_upper, color = capture_p)) +
-        geom_vline(xintercept = p(), color = "darkgray") +
+        geom_vline(xintercept = p, color = "darkgray") +
         labs(
           y = "", x = "Bounds of the confidence interval",
           color = "Does the interval capture the true population proportion?"
         ) +
         theme(legend.position = "bottom")
-    })
-  },
-  options = list(height = 700)
-)
+    
 ```
 
-6.  Given a sample size of 60, 1000 bootstrap samples for each interval, and 50 
-    confidence intervals constructed (the default values for the above app), what 
-    proportion of your confidence intervals include the true population proportion? 
-    Is this proportion exactly equal to the confidence level? If not, explain why. 
-    Make sure to include your plot in your answer.
 
-## More Practice
 
-7.  Choose a different confidence level than 95%. Would you expect a confidence 
-    interval at this level to me wider or narrower than the confidence interval 
-    you calculated at the 95% confidence level? Explain your reasoning.
-
-8.  Using code from the **infer** package and data fromt the one sample you have 
-    (`samp`), find a confidence interval for the proportion 
-    of US Adults who think climate change is affecting their local community with a 
-    confidence level of your choosing (other than 95%) and interpret it.
-
-9.  Using the app, calculate 50 confidence intervals at the confidence level you chose 
-    in the previous question, and plot all intervals on one plot, and calculate 
-    the proportion of intervals that include the true population proportion. 
-    How does this percentage compare to the confidence level selected for the 
-    intervals?
-    
-10.  Lastly, try one more (different) confidence level. First, state how you expect the
-    width of this interval to compare to previous ones you calculated. Then, 
-    calculate the bounds of the interval using the **infer** package and data 
-    from `samp` and interpret it. Finally, use the app to generate many intervals 
-    and calculate the proportion of intervals that are capture the true population 
-    proportion.
-
-11.  Using the app, experiment with different sample sizes and comment on how the 
-    widths of intervals change as sample size changes (increases and decreases).
-    
-12.  Finally, given a sample size (say, 60), how does the width of the interval change 
-    as you increase the number of bootstrap samples. **Hint:** Does changing the 
-    number of bootstap samples affect the standard error?
     
 ## Deliverables
 
