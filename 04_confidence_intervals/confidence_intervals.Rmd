@@ -115,10 +115,7 @@ samp <- us_adults %>%
 
 ### Exercise 1
 
-What percent of the adults in your sample think climate change affects their 
-local community? **Hint:** Just like we did with the population, we can calculate 
-the proportion of those **in this sample** who think climate change affects their 
-local community.
+Just like we did with the population, we can calculate the proportion of those **in this sample** who think climate change affects their local community. What percent of the adults in your sample think climate change affects their local community? 
 
 
 
@@ -156,7 +153,7 @@ Function    | Purpose
 
 This code will find the 95 percent confidence interval for proportion of US adults who think climate change affects their local community.
 
-```{r confidence interval infer}
+```{r confidence_interval_infer}
 samp %>%
   specify(response = climate_change_affects, success = "Yes") %>%
   generate(reps = 1000, type = "bootstrap") %>%
@@ -179,20 +176,20 @@ In this case, you have the rare luxury of knowing the true population proportion
 
 ### Exercise 2
 
-Each student should have gotten a slightly different confidence interval. What 
-    proportion of those intervals would you expect to capture the true population 
-    mean? Why?
+Depending on the choice of seed, different people should have gotten a slightly different confidence interval. What proportion of those intervals (across other students working on this lab) would you expect to capture the true population mean? Why?
     
 ### Exercise 3
 
-Following the example from code chunk `confidence interval infer` and data from the one sample you have 
-    (`samp`), find a confidence interval for the proportion of US Adults who think climate change is affecting their local community with a confidence level of your choosing (other than 95%) and interpret it.
+Following the example from code chunk `confidence_interval_infer` and data from the one sample you have 
+(`samp`), find a confidence interval for the proportion of US Adults who think climate change is affecting their local community with a confidence level of your choosing (other than 95%) and interpret it.
     
 ### Exercise 4
 
-Repeat the code found in code chunk `confidence interval infer` but change bootstrap samples from 1000 to 500 and then again to 100. How does the width of the interval change 
-    as you decrease the number of bootstrap samples? Does changing the 
-    number of bootstap samples affect the standard error?
+Repeat the code found in code chunk `confidence_interval_infer` but change bootstrap samples from 1000 to 500 and then again to 100. 
+
+a.) How does the width of the interval change as you decrease the number of bootstrap samples? 
+
+b.) Does changing the number of bootstap samples affect the standard error?
 
 ## Getting Fancy
 
@@ -206,12 +203,13 @@ Doing this would require learning programming concepts like iteration so that yo
 
 ### Exercise 4
 
-Choose a confidence level. Then given a sample size of 60, 1000 bootstrap samples for each interval, and 50 
-    confidence intervals constructed as inputs, use the code below to determine what 
-    proportion of your confidence intervals include the true population proportion. 
-    Is this proportion exactly equal to the confidence level? If not, explain why. 
+a.) Change values in the `parameters` code chunk so that you have a sample size of 60, 1000 bootstrap samples for each interval, 50 confidence intervals, and a confidence level of your choice. 
 
-```{r}
+b.) Then run the code in the `run-this1` chunk to determine what proportion of your confidence intervals include the true population proportion. The plot in the `run-this2` chunk can help you visualize the answer, but I'm looking for you to use some `dplyr` verbs to manipulate `toPlot`. **Hint**: You want to `count` each of the two `group`s in `capture_p`. 
+
+c.) Is this proportion exactly equal to the confidence level? If not, explain why. 
+
+```{r, parameters}
 ## change these parameters
 
 n_samp = 50 ## change to sample size for each resample
@@ -220,7 +218,7 @@ n_ci = 5 ## change to how many confidence intervals you want
 conf_level = 0.8 ## confidence level (as decimal)
 ```
 
-```{r, echo=FALSE}
+```{r, run-this1,echo=FALSE}
 p <- 0.62 ## population parameter for "Yes"
 
 ## run this chunk without changing anything, you don't have to understand the code in this chunk
@@ -247,8 +245,14 @@ store_ci <- function(i, n, reps, conf_level, success) {
           capture_p = ifelse(x_lower < p & x_upper > p, "Yes", "No")
         )
 
+   
 
-      ggplot(toPlot) +
+     
+    
+```
+
+```{r, runthis2}
+ ggplot(toPlot) +
         geom_segment(aes(x = x_lower, y = y_lower, xend = x_upper, yend = y_upper, color = capture_p)) +
         geom_point(aes(x = x_lower, y = y_lower, color = capture_p)) +
         geom_point(aes(x = x_upper, y = y_upper, color = capture_p)) +
@@ -258,17 +262,14 @@ store_ci <- function(i, n, reps, conf_level, success) {
           color = "Does the interval capture the true population proportion?"
         ) +
         theme(legend.position = "bottom")
-    
 ```
 
 
-
-    
 ## Deliverables
 
 When you are finished editing your Markdown document click the "Knit" button and choose "Knit to HTML" in the top left corner of RStudio. This will run all of your code and create a formatted document of the output. If you get an error, it means something in your Markdown file isn't right, either an error in code or some error in formatting. Call me into your breakout room, and we will troubleshoot.
 
-Submit your Markdown document and knitted file to [Moodle](https://moodle.smith.edu/) as:
+Each of you submit the same Markdown document and knitted file (html) to [Moodle](https://moodle.smith.edu/) as:
 
 LastName-LastName-L-04.Rmd  (add a third last name if applicable)
 
