@@ -39,11 +39,11 @@ The dollar sign basically says "go to the data frame that comes before me, and f
 What command would you use to extract just the counts of girls baptized? Try
    it!
    
-```{r view-girls, exercise = T}
+```{r viewG, exercise = T}
 ___$___
 ```
 
-```{r view-girls-solution}
+```{r viewG-solution}
 arbuthnot$girls
 ```
 
