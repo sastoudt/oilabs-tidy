@@ -1,29 +1,33 @@
 ---
 title: "Introduction to data"
-output:
-  html_document:
-    theme: cerulean
-    highlight: pygments
-    css: ../lab.css
-    toc: true
-    toc_float: true
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
 ---
 
-```{r global-options, include=FALSE}
-knitr::opts_chunk$set(eval = TRUE, results = FALSE, fig.show = "hide", message = FALSE)
+```{r setup, include=FALSE,message=FALSE}
+library(learnr)
 library(tidyverse)
+library(gradethis)
 library(openintro)
+tutorial_options(
+  # use gradethis for checking
+  exercise.checker = gradethis::grade_learnr
+  )
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Logistics
 
-This lab will occur remotely and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s) from last week. 
+This lab will occur remotely and in groups of three. For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s) from last week. 
 
 For those participating syncronously I will be available in the main Zoom room to answer questions. If you have a question or technical problem, click the "Ask for Help" button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.  
 
 For those of you participating asynchronously, alert me to technical challengs over Slack DM, and I will get back to you as soon as possible. For questions about the content of the lab, please sign up for an office hour time block. 
 
-Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To do so, whoever was *not* the main recorder last week should be the main recorder of answers in the lab document this week. It may be helpful to share your screen. 
+Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To be clear, everyone submits files to Moodle, but the files can be the same within a group. Today one of you should be the main recorder of answers in the lab document. You will share this document with your teammates. As you work it may be helpful to share your screen. Be sure to switch roles from last week so that someone else is the main recorder. It may be helpful to share your screen. 
 
 You all should also feel free to ask and answer questions amongst yourselves via Zoom if participating synchronously or via Slack if participating asynchronously. Please note at the end of the lab document who you consulted for help.
 
@@ -38,34 +42,20 @@ summaries of data on these flights and explore delay times. Since this is a larg
 data set, along the way you'll also learn the indispensable skills of data 
 processing and subsetting.
 
-### Load packages
+## Load packages
 
 In this lab, we will explore and visualize the data using the **tidyverse** suite of 
 packages. The data can be found in the companion package for OpenIntro labs, **openintro**.
 
 Let's load the packages.
 
-```{r load-packages, message=FALSE}
+```{r load-packages, exercise = T}
 library(tidyverse)
 library(openintro)
 ```
 
-### Creating a reproducible lab report
 
-Remember that we will be using R Markdown to create reproducible lab reports. 
-In RStudio, go to New File -> R Markdown... Then, choose From Template and then choose `Lab Report` (not the specific one we used for Lab 1) from the list of templates. Make sure to name the document appropriately and pick a location for the file where you know how to find it on your computer.
-
-![](img/template-setup.png){width=60%}
-
-See the following video describing how to get started with creating these 
-reports for this lab, and all future labs:
-
-[**Basic R Markdown with an OpenIntro Lab**](https://www.youtube.com/watch?v=Pdc368lS2hk)
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Pdc368lS2hk" frameborder="0" allowfullscreen></iframe>
-
-**Note: This video was made using `oilabs`. We will NOT be using `oilabs`. Be sure to pick the Lab Report template that goes with `openintro` as shown in screenshot above. Make sure you have `library(openintro)` in your first chunk not `library(oilabs)`.**
-
-### The data
+## The data
 
 The [Bureau of Transportation Statistics](http://www.rita.dot.gov/bts/about/) 
 (BTS) is a statistical agency that is a part of the Research and Innovative 
@@ -76,7 +66,7 @@ in this lab.
 First, we'll view the `nycflights` data frame. Type the following in your console
 to load the data:
 
-```{r load-data}
+```{r load-data, exercise = T}
 data(nycflights)
 ```
 
@@ -87,14 +77,14 @@ be used throughout the labs. For this data set, each *observation* is a single f
 
 To view the names of the variables, type the command
 
-```{r names}
+```{r names, exercise = T}
 names(nycflights)
 ```
 
 This returns the names of the variables in this data frame. The **codebook**
 (description of the variables) can be accessed by pulling up the help file:
 
-```{r help}
+```{r help, exercise = T}
 ?nycflights
 ```
 
@@ -120,34 +110,33 @@ is coded according to the following system.
     + `YV`:          Mesa Airlines Inc.
 
 
-Remember that you can use `glimpse` to take a quick peek at your data to 
+We can use `glimpse` to take a quick peek at your data to 
 understand its contents better.
 
-```{r glimpse}
+```{r glimpse, exercise = T}
 glimpse(nycflights)
 ```
 
-The `nycflights` data frame is a massive trove of information. Let's think about 
-some questions we might want to answer with these data:
 
-- How delayed were flights that were headed to Los Angeles?
-- How do departure delays vary by month?
-- Which of the three major NYC airports has the best on time percentage for 
-departing flights?
+## Making plots to explore the data
 
+We use the `ggplot()` function to build plots. 
+If you run the plotting code in your console, you should see the plot appear under the *Plots* tab of the lower right panel of RStudio. If you run the chunk, the plot will appear beneath the code chunk.
+ 
+With `ggplot()`:
 
-## Analysis
+- The first argument is always the dataset. 
+- Next, you provide the variables from the dataset to be assigned to `aes`thetic elements of the plot, e.g. the x and the y axes. 
+- Finally, you use another layer, separated by a `+` to specify the `geom`etric object for the plot. Since we want to scatterplot, we use `geom_point()`.
 
-### Lab report
-To record your analysis in a reproducible format, you can adapt the general Lab 
-Report template from the **openintro** package. Watch the video above to learn how.
+For instance, if you wanted to visualize the above plot using a line graph, you would replace `geom_point()` with `geom_line()`.
 
-### Departure delays
+## Departure delays
 
 Let's start by examing the distribution of departure delays of all flights with a 
 histogram.
 
-```{r hist-dep-delay}
+```{r hist-dep-delay, exercise = T}
 ggplot(data = nycflights, aes(x = dep_delay)) +
   geom_histogram()
 ```
@@ -161,33 +150,46 @@ distribution of numerical data, but that shape can change depending on how the
 data is split between the different bins. You can easily define the binwidth you 
 want to use:
 
-```{r hist-dep-delay-bins}
+```{r hist-dep-delay-bins, exercise = T}
 ggplot(data = nycflights, aes(x = dep_delay)) +
   geom_histogram(binwidth = 15)
 ggplot(data = nycflights, aes(x = dep_delay)) +
   geom_histogram(binwidth = 150)
 ```
 
-1.  Look carefully at these three histograms. How do they compare? Are features
-revealed in one that are obscured in another?
+Look carefully at these three histograms. How do they compare? 
+
+```{r magnitude}
+question("Are features revealed in one that are obscured in another?",
+    answer("No, they look the same."),
+    answer("Yes, more detail is shown with a binwidth of 15.", correct = T),
+    answer("Yes, more detail is shown with a binwidth of 150."),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+## Piping
+
+The `%>%` operator is called the **piping** operator. It takes the output of the previous expression and pipes it into the first argument of the function in the following one. 
+To continue our analogy with mathematical functions, `x %>% f(y)` is equivalent to `f(x, y)`.
 
 If you want to visualize only on delays of flights headed to Los Angeles, you need 
 to first `filter` the data for flights with that destination (`dest == "LAX"`)
 and then make a histogram of the departure delays of only those flights. Note that a common mistake is not using the double equal signs. Remember one equal sign assigns "LAX" to the variable `dest` while two equal signs asks the question "does each value in `dest` match 'LAX'?".
 
-```{r lax-flights-hist}
+```{r lax-flights-hist, exercise = T}
 lax_flights <- nycflights %>%
   filter(dest == "LAX")
+
 ggplot(data = lax_flights, aes(x = dep_delay)) +
   geom_histogram()
 ```
 
+**A note on piping:** Note that we can read these two lines of code as the following: *"Take the `nycflights` dataset and **pipe** it into the `filter` function. 
+Filter the `nycflights` data set so that we only have rows where the destination is LAX.
 
-![](img/dplyr_filter.jpg)
-
-[Artwork](https://github.com/allisonhorst/stats-illustrations/) by @allison_horst
-
-Let's decipher these two commands (OK, so it might look like four lines, but
+With all of that in mind, let's decipher these two commands (OK, so it might look like four lines, but
 the first two physical lines of code are actually part of the same command. It's 
 common to add a break to a new line after `%>%` to help readability).
 
@@ -215,7 +217,7 @@ analysis are as follows:
 
 You can also obtain numerical summaries for these flights:
 
-```{r lax-flights-summ}
+```{r lax-flights-summ, exercise = T}
 lax_flights %>%
   summarise(mean_dd   = mean(dep_delay), 
             median_dd = median(dep_delay), 
@@ -245,10 +247,12 @@ Note that each of these functions takes a single vector as an argument and
 returns a single value. 
 </div>
 
+## More filtering
+
 You can also filter based on multiple criteria. Suppose you are interested in
 flights headed to San Francisco (SFO) in February:
 
-```{r sfo-feb-flights}
+```{r sfo-feb-flights, exercise = T}
 sfo_feb_flights <- nycflights %>%
   filter(dest == "SFO", month == 2)
 ```
@@ -257,21 +261,41 @@ Note that you can separate the conditions using commas (or "&") if you want flig
 are both headed to SFO **and** in February. If you are interested in either
 flights headed to SFO **or** in February, you can use the `|` instead of the comma. (This is located above the backslash.)
 
-Note: as you complete these exercises remember to give each code chunk a unique name in your lab report.
+Create a new data frame that includes flights headed to SFO in June, 
+    and save this data frame as `sfo_june_flights`. 
+    
+```{r filter_feb, exercise = T}
+___ <- ___ %>% ___(dest == ___, month == ___)
 
-1.  Create a new data frame that includes flights headed to SFO in February, 
-    and save this data frame as `sfo_feb_flights`. How many flights 
-    meet these criteria? 
-    
-1.  Describe the distribution of the **arrival** delays of these flights using a 
-    histogram and appropriate summary statistics. Choose a bandwidth that reveals the features of this distribution **Hint:** The summary 
-    statistics you use should depend on the shape of the distribution.
-    
+```
+
+```{r filterfeb-solution}
+sfo_june_flights <- nycflights %>% filter(dest == "SFO", month == 6)
+
+```
+
+How many flights meet these criteria? **Hint:** How many rows are in `sfo_feb_flights`? To learn what a function does and its arguments that are available to you, use the "Help" tab in the bottom right. Try this for `dim` and `nrow`. 
+
+```{r dimFlights, exercise = T}
+dim(___)
+
+nrow(___)
+```
+
+
+```{r dimFlights-solution}
+dim(sfo_june_flights)
+
+nrow(sfo_june_flights)
+```
+
+## Summary statistics
+
 Another useful technique is quickly calculating summary statistics for various 
 groups in your data frame. For example, we can modify the above command using 
 the `group_by` function to get the same summary stats for each origin airport:
 
-```{r summary-custom-list-origin}
+```{r summary-custom-list-origin, exercise = T}
 sfo_feb_flights %>%
   group_by(origin) %>%
   summarise(median_dd = median(dep_delay), iqr_dd = IQR(dep_delay), n_flights = n())
@@ -283,6 +307,21 @@ statistics.
 1.  Calculate the median and interquartile range for `arr_delay`s of flights in
     in the `sfo_feb_flights` data frame, grouped by carrier. Which carrier
     has the most variable arrival delays?
+
+```{r summary-custom-list-carrier, exercise = T}
+sfo_feb_flights %>%
+  ___(___) %>%
+  summarise(median_dd = ___(arr_delay), iqr_dd = ___(arr_delay))
+```
+    
+```{r summary-custom-list-carrier-solution}
+sfo_feb_flights <- nycflights %>%
+  filter(dest == "SFO", month == 2)
+
+sfo_feb_flights %>%
+  group_by(carrier) %>%
+  summarise(median_dd = median(arr_delay), iqr_dd = IQR(arr_delay))
+```
 
 ### Departure delays by month
 
@@ -297,25 +336,13 @@ you are learning, you could
     + `summarise` mean departure delays.
 - Then, you could to `arrange` these average delays in `desc`ending order
 
-```{r mean-dep-delay-months}
+```{r mean-dep-delay-months, exercise = T}
 nycflights %>%
   group_by(month) %>%
   summarise(mean_dd = mean(dep_delay)) %>%
   arrange(desc(mean_dd))
 ```
 
-1.  Suppose you really dislike departure delays and you want to schedule 
-    your travel in a month that minimizes your potential departure delay leaving 
-    NYC. One option is to choose the month with the lowest mean departure delay.
-    Another option is to choose the month with the lowest median departure delay. 
-    What are the pros and cons of these two choices?
-
-<!--
-Which month has the highest average departure delay from an NYC airport? What
-    about the highest median departure delay? Which of these measures is more 
-    reliable for deciding which month(s) to avoid flying if you really dislike 
-    delayed flights.
--->
 
 ### On time departure rate for NYC airports
 
@@ -337,7 +364,7 @@ percentage.
 Let's start with classifying each flight as "on time" or "delayed" by
 creating a new variable with the `mutate` function.
 
-```{r dep-type}
+```{r dep-type, exercise = T}
 nycflights <- nycflights %>%
   mutate(dep_type = ifelse(dep_delay < 5, "on time", "delayed"))
 ```
@@ -352,38 +379,76 @@ version of this data frame that includes the new `dep_type` variable.
 
 We can handle all of the remaining steps in one code chunk:
 
-```{r ot-dep-rate}
+```{r ot-dep-rate, exercise = T}
 nycflights %>%
   group_by(origin) %>%
   summarise(ot_dep_rate = sum(dep_type == "on time") / n()) %>%
   arrange(desc(ot_dep_rate))
 ```
 
-1.  If you were selecting an airport simply based on the on time departure 
-    percentage, which NYC airport would you choose to fly out of?
+    
+```{r select-airport}
+question("If you were selecting an airport simply based on the on time departure 
+    percentage, which NYC airport would you choose to fly out of?",
+    answer("LGA", correct =T),
+    answer("JFK"),
+    answer("EWR"),
+    answer("None of the above."),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
 
 You can also visualize the distribution of on on time departure rate across 
 the three airports using a segmented bar plot.
 
-```{r viz-origin-dep-type}
+```{r viz-origin-dep-type, exercise = T}
 ggplot(data = nycflights, aes(x = origin, fill = dep_type)) +
   geom_bar()
 ```
 
-* * *
+***
 
-## More Practice
+## Creating a reproducible lab report
 
-1.  Mutate the data frame so that it includes a new variable that contains the 
-    average speed, `avg_speed` traveled by the plane for each flight (in mph).
-    **Hint:** Average speed can be calculated as distance divided by
-    number of hours of travel, and note that `air_time` is given in minutes.
+For the rest of this lab you will R Markdown to create a reproducible lab report. 
+In RStudio, go to New File -> R Markdown... Then, choose From Template and then choose `Lab Report` from the list of templates. Make sure to name the document appropriately and pick a location for the file where you know how to find it on your computer.
+
+![](img/template-setup.png){width=60%}
+
+See the following video describing how to get started with creating these 
+reports for this lab, and all future labs:
+
+[**Basic R Markdown with an OpenIntro Lab**](https://www.youtube.com/watch?v=Pdc368lS2hk)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Pdc368lS2hk" frameborder="0" allowfullscreen></iframe>
+
+**Note: This video was made using `oilabs`. We will NOT be using `oilabs`. Be sure to pick the Lab Report template that goes with `openintro` as shown in screenshot above. Make sure you have `library(openintro)` in your first chunk not `library(oilabs)`.**
+
+## Questions for Lab Report
+
+Answer in an Rmd file based on the lab report template.
+
+1.  Suppose you really dislike departure delays and you want to schedule 
+    your travel in a month that minimizes your potential departure delay leaving 
+    NYC. One option is to choose the month with the lowest mean departure delay.
+    Another option is to choose the month with the lowest median departure delay. 
+    What are the pros and cons of these two choices?
     
-1.  Make a scatterplot of `avg_speed` vs. `distance`. Describe the relationship
-    between average speed and distance.
-    **Hint:** Use `geom_point()`.
+2. The `nycflights` data frame is a massive trove of information. Pick one of the following questions and tell me which R functions you would use to investigate the question.
 
-1.  Replicate the following plot. **Hint:** The data frame plotted only
+- How delayed were flights that were headed to Los Angeles?
+- How do departure delays vary by month?
+- Which of the three major NYC airports has the best on time percentage for 
+departing flights?
+
+3.  Describe the distribution (center, variation, range, skewness/symmetry) of the **arrival** delays of these flights. Would the mean or median be a more appropriate measure of center? Would the standard deviation or the interquartile range be a more appropriate measure of variability. Why?
+
+```{r}
+ggplot(data = sfo_feb_flights, aes(x = arr_delay)) +
+  geom_histogram(binwidth = 5)
+```
+
+4.  Load the `nycflights` dataset and replicate the following plot. **Hint:** The data frame plotted only
     contains flights from American Airlines, Delta Airlines, and United
     Airlines, and the points are `color`ed by `carrier`. Once you replicate
     the plot, determine (roughly) what the cutoff point is for departure
@@ -405,11 +470,11 @@ When you are finished editing your Markdown document click the "Knit" button and
 
 Submit your Markdown document and knitted file to [Moodle](https://moodle.smith.edu/) as:
 
-LastName-LastName-L-02.Rmd  (add a third last name if applicable)
+LastName-LastName-LastName-L-02.Rmd  (add a third last name if applicable)
 
-LastName-LastName-L-02.html
+LastName-LastName-LastName-L-02.html
 
-*Due*: Monday, September 14th (beginning of class time, Eastern time)
+*Due*: Monday,  (beginning of class time, Eastern time)
 
 
 * * *
