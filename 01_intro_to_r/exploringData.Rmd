@@ -6,10 +6,13 @@ output: learnr::tutorial
 runtime: shiny_prerendered
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE,message=FALSE}
 library(learnr)
+library(gradethis)
 library(tidyverse)
 library(openintro)
+knitr::opts_chunk$set(echo = FALSE)
+
 ```
 
 ## Let's Explore
@@ -33,6 +36,16 @@ What command would you use to extract just the counts of girls baptized? Try
    
 ```{r view-girls, exercise = T}
 ___$___
+```
+
+```{r view-girls-solution, eval = F}
+arbuthnot$girls
+```
+
+```{r view-girls-check}
+grade_result(
+  pass_if(~ identical(as.character(.result[1,1]), "4683"), "You have successfully extracted the counts of girls baptized.")
+)
 ```
     
 Notice that the way R has printed these data is different. When we looked at the complete data frame, we saw 82 rows, one on each line of the display. 
@@ -75,7 +88,7 @@ To learn what a function does and its arguments that are available to you, use t
 
 
 How would you create a plot that would help you answer the following question:
-Is there an apparent trend in the number of girls baptized over the years? 
+Is there an apparent trend in the number of boys baptized over the years? 
 
                               
 ```{r plot-boys-vs-year-point, exercise = T}
@@ -83,11 +96,24 @@ ggplot(data = ___, aes(x = ___, y = ___)) +
   geom_point()
 ```
 
+You want it to look like this.
+
+```{r plot-boys-vs-year-point-solution}
+ggplot(data = arbuthnot, aes(x =year, y = boys)) + 
+  geom_point()
+```
+
 What if you wanted a line instead of points?
 
 ```{r plot-boys-vs-year-line, exercise = T}
 ggplot(data = ___, aes(x = ___, y = ___)) + ___
+```
 
+You want it to look like this.
+
+```{r plot-boys-vs-year-line-solution}
+ggplot(data = arbuthnot, aes(x =year, y = boys)) + 
+  geom_line()
 ```
 
 ## R as a big calculator
@@ -181,6 +207,16 @@ ggplot(data = ___, aes(x = ___, y = ___)) +
   geom_line()
 ```
 
+You want it to look like this.
+
+```{r plot-prop-boys-solution}
+arbuthnot <- arbuthnot %>% mutate(total = boys + girls) %>%
+  mutate(boy_ratio = boys / total)
+
+ggplot(data = arbuthnot, aes(x =year, y = boy_ratio)) + 
+  geom_line()
+```
+
 <div id="boxedtext">
 **Tip: ** If you use the up and down arrow keys, you can scroll through your previous commands, your so-called command history. 
 You can also access it by clicking on the history tab in the upper right panel. 
@@ -223,10 +259,28 @@ ___ %>%
   summarise(min = min(___), max = max(___))
 ```
 
+```{r range-check}
+grade_result(
+  pass_if(~ identical(as.character(.result[1,1]), "1940"), "You have successfully extracted the counts of girls baptized.")
+)
+```
+
+```{r range-solution, eval = F}
+present %>%
+  summarise(min = min(year), max = max(year))
+```
+
+
 What are the dimensions of the data frame? 
 
 ```{r dim, exercise = T}
 glimpse(___)
+```
+
+You want it to look like this.
+
+```{r dim-solution, eval = F}
+glimpse(present)
 ```
 
 What are the variable (column) names?
@@ -234,8 +288,14 @@ What are the variable (column) names?
 ```{r names, exercise = T}
 names(___)
 ```
+
+You want it to look like this.
+
+```{r names-solution, eval = F}
+names(present)
+```
   
-How do these counts compare to Arbuthnot's? Are they of a similar magnitude?
+How do these counts compare to Arbuthnot's? 
 
 ```{r compare, exercise = T}
 arbuthnot %>%
@@ -245,12 +305,55 @@ ___ %>%
    summarise(min = min(boys), max = max(boys))
 ```
 
-Make a plot that displays the proportion of boys born over time. What do you see? 
+```{r compare-solution, eval = T}
+arbuthnot %>%
+  summarise(min = min(boys), max = max(boys))
+
+present %>% 
+   summarise(min = min(boys), max = max(boys))
+```
+
+
+```{r magnitude}
+question("Are they of a similar magnitude?",
+    answer("Yes"),
+    answer("No, Arbuthnot's are greater."),
+    answer("No, the US's are greater.", correct = T),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+
+Make a plot that displays the proportion of boys born over time. 
 
 ```{r plot-prop-boys-2, exercise = T}
+present <- present %>% mutate(boy_ratio = ___)
+
 ggplot(data = ___, aes(x = ___, y = ___)) + 
   geom_line()
 ```
+
+You want it to look like this.
+
+```{r plot-prop-boys-2-solution}
+present <- present %>% mutate(boy_ratio = boys/(boys+girls))
+
+ggplot(data = present, aes(x = year, y = boy_ratio)) + 
+  geom_line()
+```
+
+
+```{r obs-hold}
+question("Does Arbuthnot's observation about boys being born in greater proportion than girls hold up in the U.S.?",
+    answer("Yes",correct = T),
+    answer("No"),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+
 
 
 In what year did we see the most total number of births in the U.S.? *Hint:*
@@ -262,6 +365,16 @@ in a descending order with another function: `desc` (for descending order).
 ```{r sample-arrange, exercise = T}
 present <- present %>%
   mutate(total = ___)
+
+present %>%
+  arrange(desc(total))
+```
+
+You want it to look like this.
+
+```{r sample-arrange-solution}
+present <- present %>%
+  mutate(total = boys + girls)
 
 present %>%
   arrange(desc(total))
