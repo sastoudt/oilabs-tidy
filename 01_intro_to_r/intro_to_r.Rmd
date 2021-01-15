@@ -186,7 +186,7 @@ To export files from the R server to your personal computer so that you can turn
 knitr::include_graphics("img/export.png") 
 ```
 
-When you are finished on the server, always exit your session before closing the browser. 
+When you are finished on the server, always exit your session before closing the browser. If it asks to save your workspace say "no". 
 
 1. Exit your server session by clicking on the orange button at the top right.
 
