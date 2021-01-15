@@ -1,7 +1,6 @@
 ---
 title: "Exploring Data"
 author: "Sara Stoudt"
-date: "1/15/2021"
 output: 
   learnr::tutorial:
     progressive: true
@@ -14,15 +13,11 @@ library(learnr)
 library(tidyverse)
 library(gradethis)
 library(openintro)
-library(testthat)
 tutorial_options(
-  # code running in exercise times out after 30 seconds
-  exercise.timelimit = 30, 
   # use gradethis for checking
   exercise.checker = gradethis::grade_learnr
   )
 knitr::opts_chunk$set(echo = FALSE)
-
 ```
 
 ## Let's Explore
