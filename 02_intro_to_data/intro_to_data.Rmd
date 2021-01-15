@@ -323,25 +323,6 @@ sfo_feb_flights %>%
   summarise(median_dd = median(arr_delay), iqr_dd = IQR(arr_delay))
 ```
 
-### Departure delays by month
-
-Which month would you expect to have the highest average delay departing from an
-NYC airport?
-
-Let's think about how you could answer this question:
-
-- First, calculate monthly averages for departure delays. With the new language
-you are learning, you could
-    + `group_by` months, then
-    + `summarise` mean departure delays.
-- Then, you could to `arrange` these average delays in `desc`ending order
-
-```{r mean-dep-delay-months, exercise = T}
-nycflights %>%
-  group_by(month) %>%
-  summarise(mean_dd = mean(dep_delay)) %>%
-  arrange(desc(mean_dd))
-```
 
 
 ### On time departure rate for NYC airports
@@ -399,22 +380,30 @@ question("If you were selecting an airport simply based on the on time departure
   )
 ```
 
-You can also visualize the distribution of on on time departure rate across 
-the three airports using a segmented bar plot.
 
-```{r viz-origin-dep-type, exercise = T}
-ggplot(data = nycflights, aes(x = origin, fill = dep_type)) +
-  geom_bar()
-```
 
 ***
+
+## Submit checkpoint
+
+```{r context="server"}
+learnrhash::encoder_logic()
+```
+
+```{r encode, echo=FALSE}
+learnrhash::encoder_ui(
+  ui_before = div(strong("Submit your hash in the form below."), br(), br()),
+  ui_after  = learnrhash::iframe_ui(
+    src = "https://docs.google.com/forms/", ## change link, include name
+    width="900px", height= "1000px"
+  )
+)
+```
 
 ## Creating a reproducible lab report
 
 For the rest of this lab you will R Markdown to create a reproducible lab report. 
 In RStudio, go to New File -> R Markdown... Then, choose From Template and then choose `Lab Report` from the list of templates. Make sure to name the document appropriately and pick a location for the file where you know how to find it on your computer.
-
-![](img/template-setup.png){width=60%}
 
 See the following video describing how to get started with creating these 
 reports for this lab, and all future labs:
@@ -441,6 +430,24 @@ Answer in an Rmd file based on the lab report template.
 - Which of the three major NYC airports has the best on time percentage for 
 departing flights?
 
+**Hint** Example: Which month would you expect to have the highest average delay departing from an NYC airport?
+
+Let's think about how you could answer this question:
+
+- First, calculate monthly averages for departure delays. With the new language
+you are learning, you could
+    + `group_by` months, then
+    + `summarise` mean departure delays.
+- Then, you could to `arrange` these average delays in `desc`ending order
+
+```{r mean-dep-delay-months, eval = F, echo = T}
+nycflights %>%
+  group_by(month) %>%
+  summarise(mean_dd = mean(dep_delay)) %>%
+  arrange(desc(mean_dd))
+```
+
+
 3.  Describe the distribution (center, variation, range, skewness/symmetry) of the **arrival** delays of these flights. Would the mean or median be a more appropriate measure of center? Would the standard deviation or the interquartile range be a more appropriate measure of variability. Why?
 
 ```{r}
@@ -465,6 +472,8 @@ You may want to refer to the [ggplot cheatsheet](https://rstudio.com/wp-content/
 
 
 ## Deliverables
+
+Make sure you have submitted your hash to the Google Form for the first part of the lab.
 
 When you are finished editing your Markdown document click the "Knit" button and choose "Knit to HTML" in the top left corner of RStudio. This will run all of your code and create a formatted document of the output. If you get an error, it means something in your Markdown file isn't right, either an error in code or some error in formatting. Call me into your breakout room, and we will troubleshoot.
 
