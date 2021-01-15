@@ -2,15 +2,25 @@
 title: "Exploring Data"
 author: "Sara Stoudt"
 date: "1/15/2021"
-output: learnr::tutorial
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE,message=FALSE}
 library(learnr)
-library(gradethis)
 library(tidyverse)
+library(gradethis)
 library(openintro)
+library(testthat)
+tutorial_options(
+  # code running in exercise times out after 30 seconds
+  exercise.timelimit = 30, 
+  # use gradethis for checking
+  exercise.checker = gradethis::grade_learnr
+  )
 knitr::opts_chunk$set(echo = FALSE)
 
 ```
@@ -38,15 +48,10 @@ What command would you use to extract just the counts of girls baptized? Try
 ___$___
 ```
 
-```{r view-girls-solution, eval = F}
+```{r view-girls-solution}
 arbuthnot$girls
 ```
 
-```{r view-girls-check}
-grade_result(
-  pass_if(~ identical(as.character(.result[1,1]), "4683"), "You have successfully extracted the counts of girls baptized.")
-)
-```
     
 Notice that the way R has printed these data is different. When we looked at the complete data frame, we saw 82 rows, one on each line of the display. 
 These data are no longer structured in a table with other variables, so they are displayed  one right after another. 
@@ -96,7 +101,6 @@ ggplot(data = ___, aes(x = ___, y = ___)) +
   geom_point()
 ```
 
-You want it to look like this.
 
 ```{r plot-boys-vs-year-point-solution}
 ggplot(data = arbuthnot, aes(x =year, y = boys)) + 
@@ -109,7 +113,6 @@ What if you wanted a line instead of points?
 ggplot(data = ___, aes(x = ___, y = ___)) + ___
 ```
 
-You want it to look like this.
 
 ```{r plot-boys-vs-year-line-solution}
 ggplot(data = arbuthnot, aes(x =year, y = boys)) + 
@@ -207,8 +210,6 @@ ggplot(data = ___, aes(x = ___, y = ___)) +
   geom_line()
 ```
 
-You want it to look like this.
-
 ```{r plot-prop-boys-solution}
 arbuthnot <- arbuthnot %>% mutate(total = boys + girls) %>%
   mutate(boy_ratio = boys / total)
@@ -216,12 +217,6 @@ arbuthnot <- arbuthnot %>% mutate(total = boys + girls) %>%
 ggplot(data = arbuthnot, aes(x =year, y = boy_ratio)) + 
   geom_line()
 ```
-
-<div id="boxedtext">
-**Tip: ** If you use the up and down arrow keys, you can scroll through your previous commands, your so-called command history. 
-You can also access it by clicking on the history tab in the upper right panel. 
-This will save you a lot of typing in the future.
-</div>
 
 Finally, in addition to simple mathematical operators like subtraction and division, you can ask R to make comparisons like greater than, `>`, less than, `<`, and equality, `==`. 
 For example, we can ask if the number of births of boys outnumber that of girls in each year with the expression
@@ -259,13 +254,7 @@ ___ %>%
   summarise(min = min(___), max = max(___))
 ```
 
-```{r range-check}
-grade_result(
-  pass_if(~ identical(as.character(.result[1,1]), "1940"), "You have successfully extracted the counts of girls baptized.")
-)
-```
-
-```{r range-solution, eval = F}
+```{r range-solution}
 present %>%
   summarise(min = min(year), max = max(year))
 ```
@@ -279,7 +268,7 @@ glimpse(___)
 
 You want it to look like this.
 
-```{r dim-solution, eval = F}
+```{r dim-solution}
 glimpse(present)
 ```
 
@@ -291,7 +280,7 @@ names(___)
 
 You want it to look like this.
 
-```{r names-solution, eval = F}
+```{r names-solution}
 names(present)
 ```
   
@@ -305,7 +294,7 @@ ___ %>%
    summarise(min = min(boys), max = max(boys))
 ```
 
-```{r compare-solution, eval = T}
+```{r compare-solution}
 arbuthnot %>%
   summarise(min = min(boys), max = max(boys))
 
@@ -334,7 +323,6 @@ ggplot(data = ___, aes(x = ___, y = ___)) +
   geom_line()
 ```
 
-You want it to look like this.
 
 ```{r plot-prop-boys-2-solution}
 present <- present %>% mutate(boy_ratio = boys/(boys+girls))
@@ -370,7 +358,7 @@ present %>%
   arrange(desc(total))
 ```
 
-You want it to look like this.
+
 
 ```{r sample-arrange-solution}
 present <- present %>%
