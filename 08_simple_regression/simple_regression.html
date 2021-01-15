@@ -1652,7 +1652,7 @@ div.tocify {
 <p>This lab will occur remotely and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on <a href="https://moodle.smith.edu/">Moodle</a>. I will assign you to a breakout room with your partner(s).</p>
 <p>For those participating syncronously I will be available in the main Zoom room to answer questions. If you have a question or technical problem, click the “Ask for Help” button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.</p>
 <p>For those of you participating asynchronously, alert me to technical challengs over Slack DM, and I will get back to you as soon as possible. For questions about the content of the lab, please sign up for an office hour time block.</p>
-<p>Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To do so, whoever was <em>not</em> the main recorder last week should be the main recorder of answers in the lab document this week. It may be helpful to share your screen.</p>
+<p>Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To do so, one of you can be the main recorder of answers in the lab document. It may be helpful to share your screen. You will be working with this same partner/group for the next lab, so you will switch roles next week.</p>
 <p>You all should also feel free to ask and answer questions amongst yourselves via Zoom if participating synchronously or via Slack if participating asynchronously. Please note at the end of the lab document who you consulted for help.</p>
 </div>
 <div id="getting-started" class="section level2">
@@ -1664,8 +1664,7 @@ div.tocify {
 <p>In this lab, you will explore and visualize the data using the <strong>tidyverse</strong> suite of packages. The data can be found in the companion package for OpenIntro resources, <strong>openintro</strong>.</p>
 <p>Let’s load the packages.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(openintro)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(statsr)</a></code></pre></div>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(openintro)</a></code></pre></div>
 </div>
 <div id="creating-a-reproducible-lab-report" class="section level3">
 <h3>Creating a reproducible lab report</h3>
@@ -1674,76 +1673,62 @@ div.tocify {
 <div id="the-data" class="section level3">
 <h3>The data</h3>
 <p>The data we’re working with is in the openintro package and it’s called <code>hfi</code>, short for Human Freedom Index.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">data</span>(hfi)</a></code></pre></div>
 <ol style="list-style-type: decimal">
-<li><p>What are the dimensions of the dataset?</p></li>
-<li><p>What type of plot would you use to display the relationship between the personal freedom score, <code>pf_score</code>, and one of the other numerical variables? Plot this relationship using the variable <code>pf_expression_control</code> as the predictor. Does the relationship look linear? If you knew a country’s <code>pf_expression_control</code>, or its score out of 10, with 0 being the most, of political pressures and controls on media content, would you be comfortable using a linear model to predict the personal freedom score?</p></li>
+<li>Plot the relationship between <code>pf_expression_control</code> (political pressures and controls on media content) and the personal freedom score, <code>pf_score</code> with <code>pf_expression_control</code> as the explanatory/predictor variable. Does the relationship look linear?</li>
 </ol>
 <p>If the relationship looks linear, we can quantify the strength of the relationship with the correlation coefficient.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">hfi <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">cor</span>(pf_expression_control, pf_score, <span class="dt">use =</span> <span class="st">&quot;complete.obs&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">hfi <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">cor</span>(pf_expression_control, pf_score, <span class="dt">use =</span> <span class="st">&quot;complete.obs&quot;</span>))</a></code></pre></div>
 <p>Here, we set the <code>use</code> argument to “complete.obs” since there are some observations of NA and we don’t want those to count towards the calculation of the correlation.</p>
 </div>
-</div>
-<div id="sum-of-squared-residuals" class="section level2">
-<h2>Sum of squared residuals</h2>
-<div id="boxedtext">
-<p>In this section, you will use an interactive function to investigate what we mean by “sum of squared residuals”. You will need to run this function in your console, not in your markdown document. Running the function also requires that the <code>hfi</code> dataset is loaded in your environment.</p>
-</div>
-<p>Think back to the way that we described the distribution of a single variable. Recall that we discussed characteristics such as center, spread, and shape. It’s also useful to be able to describe the relationship of two numerical variables, such as <code>pf_expression_control</code> and <code>pf_score</code> above.</p>
-<ol style="list-style-type: decimal">
-<li>Looking at your plot from the previous exercise, describe the relationship between these two variables. Make sure to discuss the form, direction, and strength of the relationship as well as any unusual observations.</li>
-</ol>
-<p>Just as you’ve used the mean and standard deviation to summarize a single variable, you can summarize the relationship between these two variables by finding the line that best follows their association. Use the following interactive function to select the line that you think does the best job of going through the cloud of points. Note, we first need to filter out missing values since <code>plot_ss</code> expects complete cases.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># library(tidyverse) ## make sure these are loaded locally</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co"># library(openintro)</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co"># library(statsr)</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">hfi_nice =<span class="st"> </span>hfi <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(pf_score), <span class="op">!</span><span class="kw">is.na</span>(pf_expression_control))</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw">plot_ss</span>(<span class="dt">x =</span> pf_expression_control, <span class="dt">y =</span> pf_score, <span class="dt">data =</span> hfi_nice)</a></code></pre></div>
-<p>After running this command, you’ll be prompted to click two points on the plot to define a line. Once you’ve done that, the line you specified will be shown in black and the residuals in blue. Note that there are 30 residuals, one for each of the 30 observations. Recall that the residuals are the difference between the observed values and the values predicted by the line:</p>
-<p><span class="math display">\[
-  e_i = y_i - \hat{y}_i
-\]</span></p>
-<p>The most common way to do linear regression is to select the line that minimizes the sum of squared residuals. To visualize the squared residuals, you can rerun the plot command and add the argument <code>showSquares = TRUE</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">plot_ss</span>(<span class="dt">x =</span> pf_expression_control, <span class="dt">y =</span> pf_score, <span class="dt">data =</span> hfi_nice, <span class="dt">showSquares =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<p>Note that the output from the <code>plot_ss</code> function provides you with the slope and intercept of your line as well as the sum of squares.</p>
-<ol style="list-style-type: decimal">
-<li>Using <code>plot_ss</code>, choose a line that does a good job of minimizing the sum of squares. Run the function several times. What was the smallest sum of squares that you got? How does it compare to your partner’s?</li>
-</ol>
 </div>
 <div id="the-linear-model" class="section level2">
 <h2>The linear model</h2>
 <p>It is rather cumbersome to try to get the correct least squares line, i.e. the line that minimizes the sum of squared residuals, through trial and error. Instead, you can use the <code>lm</code> function in R to fit the linear model (a.k.a. regression line).</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">m1 &lt;-<span class="st"> </span><span class="kw">lm</span>(pf_score <span class="op">~</span><span class="st"> </span>pf_expression_control, <span class="dt">data =</span> hfi)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">m1 &lt;-<span class="st"> </span><span class="kw">lm</span>(pf_score <span class="op">~</span><span class="st"> </span>pf_expression_control, <span class="dt">data =</span> hfi)</a></code></pre></div>
 <p>The first argument in the function <code>lm</code> is a formula that takes the form <code>y ~ x</code>. Here it can be read that we want to make a linear model of <code>pf_score</code> as a function of <code>pf_expression_control</code>. The second argument specifies that R should look in the <code>hfi</code> data frame to find the two variables. Note <code>lm</code> can handle missing values, so we can use the full data set here.</p>
 <p>The output of <code>lm</code> is an object that contains all of the information we need about the linear model that was just fit. We can access this information using the summary function.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">summary</span>(m1)</a></code></pre></div>
-<p>Let’s consider this output piece by piece. First, the formula used to describe the model is shown at the top. After the formula you find the five-number summary of the residuals. The “Coefficients” table shown next is key; its first column displays the linear model’s y-intercept and the coefficient of <code>at_bats</code>. With this table, we can write down the least squares regression line for the linear model:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">summary</span>(m1)</a></code></pre></div>
+<p>Let’s consider this output piece by piece. First, the formula used to describe the model is shown at the top. After the formula you find the five-number summary of the residuals. The “Coefficients” table shown next is key; its first column displays the linear model’s y-intercept and the coefficient of <code>pf_expression_control</code>.</p>
+<p>With this table, we can write down the least squares regression line for the linear model:</p>
 <p><span class="math display">\[
   \hat{y} = 4.61707 + 0.49143 \times pf\_expression\_control
 \]</span></p>
-<p>One last piece of information we will discuss from the summary output is the Multiple R-squared, or more simply, <span class="math inline">\(R^2\)</span>. The <span class="math inline">\(R^2\)</span> value represents the proportion of variability in the response variable that is explained by the explanatory variable. For this model, 63.42% of the variability in runs is explained by at-bats.</p>
+<p>One last piece of information we will discuss from the summary output is the Multiple R-squared, or more simply, <span class="math inline">\(R^2\)</span>. The <span class="math inline">\(R^2\)</span> value represents the proportion of variability in the response variable that is explained by the explanatory variable. For this model, 63.42% of the variability in personal freedom score is explained by political pressures and controls on media content.</p>
 <ol style="list-style-type: decimal">
-<li>Fit a new model that uses <code>pf_expression_control</code> to predict <code>hf_score</code>, or the total human freedom score. Using the estimates from the R output, write the equation of the regression line. What does the slope tell us in the context of the relationship between human freedom and the amount of political pressure on media content?</li>
+<li>Fit a new model that uses <code>pf_expression_control</code> to predict the total human freedom score, <code>hf_score</code>. a.) Using the estimates from the R output, write the equation of the regression line. b.) Interpet the slope in the context of the relationship between human freedom and the amount of political pressure on media content? Remember to be careful with your language and avoid causal words.</li>
 </ol>
 </div>
 <div id="prediction-and-prediction-errors" class="section level2">
 <h2>Prediction and prediction errors</h2>
 <p>Let’s create a scatterplot with the least squares line for <code>m1</code> laid on top.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> hfi, <span class="kw">aes</span>(<span class="dt">x =</span> pf_expression_control, <span class="dt">y =</span> pf_score)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> hfi, <span class="kw">aes</span>(<span class="dt">x =</span> pf_expression_control, <span class="dt">y =</span> pf_score)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code>## Warning: Removed 80 rows containing non-finite values (stat_smooth).</code></pre>
 <pre><code>## Warning: Removed 80 rows containing missing values (geom_point).</code></pre>
-<p>Here, we are literally adding a layer on top of our plot. <code>geom_smooth</code> creates the line by fitting a linear model. It can also show us the standard error <code>se</code> associated with our line, but we’ll suppress that for now.</p>
+<p>Here, we are literally adding a layer on top of our plot. <code>geom_smooth</code> creates the line by fitting a linear model. It can also show us the standard error <code>se</code> associated with our line, but we’ll suppress that for now (and talk about what it means later).</p>
 <p>This line can be used to predict <span class="math inline">\(y\)</span> at any value of <span class="math inline">\(x\)</span>. When predictions are made for values of <span class="math inline">\(x\)</span> that are beyond the range of the observed data, it is referred to as <em>extrapolation</em> and is not usually recommended. However, predictions made within the range of the data are more reliable. They’re also used to compute the residuals.</p>
 <ol style="list-style-type: decimal">
-<li>If someone saw the least squares regression line and not the actual data, how would they predict a country’s personal freedom school for one with a 6.7 rating for <code>pf_expression_control</code>? Is this an overestimate or an underestimate, and by how much? In other words, what is the residual for this prediction?</li>
+<li>a.) What is the predicted value of a country’s personal freedom score for one with a 6.7 rating for <code>pf_expression_control</code>? b.) If the true personal freedom score for this observation is 7.9, what is the residual for this prediction?</li>
 </ol>
 </div>
 <div id="model-diagnostics" class="section level2">
 <h2>Model diagnostics</h2>
 <p>To assess whether the linear model is reliable, we need to check for (1) linearity, (2) nearly normal residuals, and (3) constant variability.</p>
-<p><strong>Linearity</strong>: You already checked if the relationship between <code>pf_score</code> and <code>pf_expression_control</code> is linear using a scatterplot. We should also verify this condition with a plot of the residuals vs. fitted (predicted) values.</p>
+<p><strong>Linearity</strong>: You already checked if the relationship between <code>pf_score</code> and <code>pf_expression_control</code> is linear using a scatterplot.</p>
+<p></br></p>
+<p><strong>Nearly normal residuals</strong>: To check this condition, we can look at a histogram.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> m1, <span class="kw">aes</span>(<span class="dt">x =</span> .resid)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">25</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Residuals&quot;</span>)</a></code></pre></div>
+<ol style="list-style-type: decimal">
+<li>Based on the histogram, does the nearly normal residuals condition appear to be met?</li>
+</ol>
+<p></br></p>
+<p><strong>Constant variability</strong>:</p>
+<p>In class we looked at the residuals vs. the explanatory variable. A similar residual plot is a plot of the residuals vs. fitted (predicted) values. We can interpret this plot in the same way.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> m1, <span class="kw">aes</span>(<span class="dt">x =</span> .fitted, <span class="dt">y =</span> .resid)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span></a>
@@ -1751,47 +1736,15 @@ div.tocify {
 <a class="sourceLine" id="cb10-5" data-line-number="5"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Residuals&quot;</span>)</a></code></pre></div>
 <p>Notice here that <code>m1</code> can also serve as a data set because stored within it are the fitted values (<span class="math inline">\(\hat{y}\)</span>) and the residuals. (Don’t worry too much about why they have a period in their names; this is just how those variables are named in the <code>m1</code> data structure. These variables will always be named <code>.fitted</code> and <code>.resid</code> if they are <code>lm</code> objects.) Also note that we’re getting fancy with the code here. After creating the scatterplot on the first layer (first line of code), we overlay a horizontal dashed line at <span class="math inline">\(y = 0\)</span> (to help us check whether residuals are distributed around 0), and we also rename the axis labels to be more informative.</p>
 <ol style="list-style-type: decimal">
-<li>Is there any apparent pattern in the residuals plot? What does this indicate about the linearity of the relationship between the two variables?</li>
-</ol>
-<p></br></p>
-<p><strong>Nearly normal residuals</strong>: To check this condition, we can look at a histogram. We’ll learn more about the normal distribution in the next lab, but for now, here’s what the shape of a normal distribution looks like.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">sim_norm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">sim =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">100000</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_norm, <span class="kw">aes</span>(<span class="dt">x =</span> sim)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="st">        </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">y =</span> ..density..))</a></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> m1, <span class="kw">aes</span>(<span class="dt">x =</span> .resid)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">25</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Residuals&quot;</span>)</a></code></pre></div>
-<p>We can also look at a normal probability plot of the residuals. We’ll learn more about this plot in the next lab, but for now we want the points to roughly fall on the red line.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> m1, <span class="kw">aes</span>(<span class="dt">sample =</span> .resid)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw">geom_qq</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq_line</span>(<span class="dt">alpha =</span> <span class="fl">0.7</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>)</a></code></pre></div>
-<p>Note that the syntax for making a normal probability plot is a bit different than what you’re used to seeing: we set <code>sample</code> equal to the residuals instead of <code>x</code>, and we set a statistical method <code>qq</code>, which stands for “quantile-quantile”, another name commonly used for normal probability plots.</p>
-<ol style="list-style-type: decimal">
-<li>Based on the histogram and the normal probability plot, does the nearly normal residuals condition appear to be met?</li>
-</ol>
-<p></br></p>
-<p><strong>Constant variability</strong>:</p>
-<ol style="list-style-type: decimal">
 <li>Based on the residuals vs. fitted plot, does the constant variability condition appear to be met?</li>
 </ol>
-<hr />
-</div>
-<div id="more-practice" class="section level2">
-<h2>More Practice</h2>
-<div class="oyo">
-
-<ul>
-<li><p>Choose another freedom variable and a variable you think would strongly correlate with it.. Produce a scatterplot of the two variables and fit a linear model. At a glance, does there seem to be a linear relationship?</p></li>
-<li><p>How does this relationship compare to the relationship between <code>pf_expression_control</code> and <code>pf_score</code>? Use the <span class="math inline">\(R^2\)</span> values from the two model summaries to compare. Does your independent variable seem to predict your dependent one better? Why or why not?</p></li>
-<li><p>What’s one freedom relationship you were most surprised about and why? Display the model diagnostics for the regression model analyzing this relationship.</p></li>
-</ul>
 </div>
 <div id="deliverables" class="section level2">
 <h2>Deliverables</h2>
 <p>When you are finished editing your Markdown document click the “Knit” button and choose “Knit to HTML” in the top left corner of RStudio. This will run all of your code and create a formatted document of the output. If you get an error, it means something in your Markdown file isn’t right, either an error in code or some error in formatting. Call me into your breakout room, and we will troubleshoot.</p>
 <p>Submit your Markdown document and knitted file to <a href="https://moodle.smith.edu/">Moodle</a> as:</p>
-<p>LastName-LastName-L-08.Rmd (add a third last name if applicable)</p>
-<p>LastName-LastName-L-08.html</p>
+<p>LastName-LastName-L-07.Rmd (add a third last name if applicable)</p>
+<p>LastName-LastName-L-07.html</p>
 <p><em>Due</em>: Monday, October 26th (beginning of class time, Eastern time)</p>
 <hr />
 <p><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="data:image/png;base64,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" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a> and was adapted by Sara Stoudt.</p>

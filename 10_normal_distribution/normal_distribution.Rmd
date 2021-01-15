@@ -72,7 +72,7 @@ Let's first focus on just products from McDonalds and Dairy Queen.
 
 ```{r male-female}
 mcdonalds <- fastfood %>%
-  filter(restaurant == "McDonalds")
+  filter(restaurant == "Mcdonalds")
 dairy_queen <- fastfood %>%
   filter(restaurant == "Dairy Queen")
 ```
@@ -109,7 +109,7 @@ density histogram allows us to properly overlay a normal distribution curve over
 the histogram since the curve is a normal probability density function that also
 has area under the curve of 1. Frequency and density histograms both display the
 same exact shape; they only differ in their y-axis. You can verify this by
-comparing the frequency histogram you constructed earlier and the density
+comparing the frequency histogram you likely constructed earlier and the density
 histogram created by the commands below.
 
 ```{r hist-height}
@@ -126,9 +126,6 @@ curve, `dnorm`. We specify that we want the curve to have the same mean and
 standard deviation as the column of female heights. The argument `col` simply sets
 the color for the line to be drawn. If we left it out, the line would be drawn in
 black.
-
-2.  Based on the this plot, does it appear that the data follow a nearly normal 
-    distribution?
 
 
 ## Evaluating the normal distribution
@@ -175,7 +172,7 @@ deviation of the normal distribution from which the simulated sample will be
 generated.  You can take a look at the shape of our simulated data set, `sim_norm`, 
 as well as its normal probability plot.
 
-3.  Make a normal probability plot of `sim_norm`.  Do all of the points fall on 
+2.  Make a normal probability plot (qq-plot) of `sim_norm`.  Do all of the points fall on 
     the line?  How does this plot compare to the probability plot for the real 
     data? (Since `sim_norm` is not a dataframe, it can be put directly into the 
     `sample` argument and the `data` argument can be dropped.)
@@ -190,13 +187,16 @@ helpful to click the zoom button in the plot window.
 qqnormsim(sample = cal_fat, data = dairy_queen)
 ```
 
+3.  Using the same technique, determine whether or not the calories from McDonald's menu appear to come from a normal distribution.
+
+
 It would be nice if these were all on the same plot to better judge whether our data fits within the simulated data. We repurpose some of the code that makes up the `qqnormsim` function. To see the source code for a function (what's going on behind the scenes when you use a function), you just specify the name without any parentheses or arguments.
 
 ```{r}
 qqnormsim
 ```
 
-We'll grab the parts we need, and adjust the parts we want to change. It is common practice to build off of pre-existing code when we developm new functions. It is not crucial that you understand every line of this chunk; just focus on the resulting plot. 
+We'll grab the parts we need, and adjust the parts we want to change. It is common practice to build off of pre-existing code when we develop new functions. It is not crucial that you understand every line of this chunk; just focus on the resulting plot. 
 
 ```{r}
 y <- dairy_queen$cal_fat
@@ -217,10 +217,8 @@ ggplot(data = df, aes(sample = x, group = plotnum)) + geom_qq(alpha = 0.6) + geo
 
 4.  Does the normal probability plot for the calories from fat look similar to the plots 
     created for the simulated data?  That is, do the plots provide evidence that the
-    female heights are nearly normal?
+    calories from fat are nearly normal?
 
-5.  Using the same technique, determine whether or not the calories from McDonald's
-    menu appear to come from a normal distribution.
 
 ## Normal probabilities
 
@@ -250,7 +248,7 @@ from fat, we have to take one minus that probability.
 Assuming a normal distribution has allowed us to calculate a theoretical 
 probability.  If we want to calculate the probability empirically, we simply 
 need to determine how many observations fall above 600 then divide this number 
-by the total sample size.
+by the total sample size. This is what we did when we were computing p-values ourselves.
 
 ```{r probability}
 dairy_queen %>% 
@@ -262,27 +260,9 @@ Although the probabilities are not exactly the same, they are reasonably close.
 The closer that your distribution is to being normal, the more accurate the 
 theoretical probabilities will be.
 
-6.  Write out two probability questions that you would like to answer about any 
-    of the restaurants in this dataset.  Calculate those probabilities using both
-    the theoretical normal distribution as well as the empirical distribution 
-    (four probabilities in all).  Which one had a closer agreement between the 
-    two methods?
+5.  Write out a probability question that you would like to answer about any 
+    of the restaurants in this dataset that would take advantage of `qnorm`.  Calculate that probability.
 
-* * *
-
-## More Practice
-
-7.  Now let's consider some of the other variables in the dataset.  Out of all the
-    different restaurants, which ones' distribution is the closest to normal for sodium?
-   
-8.  Note that some of the normal probability plots for sodium distributions seem
-    to have a stepwise pattern. why do you think this might be the case?
-
-9.  As you can see, normal probability plots can be used both to assess 
-    normality and visualize skewness.  Make a normal probability plot for the total
-    carbohydrates from a restaurant of your choice.  Based on this normal 
-    probability plot, is this variable left skewed, symmetric, or right skewed?  
-    Use a histogram to confirm your findings.
 
 ## Deliverables
 

@@ -1,0 +1,137 @@
+---
+title: "Lab Name"
+author: "Author Name"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+library(infer)
+
+us_adults <- tibble(
+  climate_change_affects = c(rep("Yes", 62000), rep("No", 38000))
+)
+```
+
+### Exercise 1
+
+
+```{r code-chunk-label}
+n <- 60
+samp <- us_adults %>%
+  slice_sample(n = n) %>% count(climate_change_affects) %>% mutate(p_hat = n /sum(n)) 
+```
+
+### Exercise 2
+
+Truth is 62%
+
+```{r}
+samp %>%
+  specify(response = climate_change_affects, success = "Yes") %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "prop") %>%
+  get_ci(level = 0.95)
+
+n <- 60
+new_samp <- us_adults %>%
+  slice_sample(n = n) %>% count(climate_change_affects) %>% mutate(p_hat = n /sum(n)) 
+
+new_samp %>%
+  specify(response = climate_change_affects, success = "Yes") %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "prop") %>%
+  get_ci(level = 0.95)
+```
+
+### Exercise 3
+
+```{r}
+new_samp %>%
+  specify(response = climate_change_affects, success = "Yes") %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "prop") %>%
+  get_ci(level = 0.90)
+```
+
+### Exercise 4
+
+```{r}
+samp %>%
+  specify(response = climate_change_affects, success = "Yes") %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "prop") %>%
+  get_ci(level = 0.95)
+
+samp %>%
+  specify(response = climate_change_affects, success = "Yes") %>%
+  generate(reps = 500, type = "bootstrap") %>%
+  calculate(stat = "prop") %>%
+  get_ci(level = 0.95)
+
+samp %>%
+  specify(response = climate_change_affects, success = "Yes") %>%
+  generate(reps = 100, type = "bootstrap") %>%
+  calculate(stat = "prop") %>%
+  get_ci(level = 0.95)
+
+```
+
+### Exercise 5
+
+```{r, parameters}
+## change these parameters
+
+n_samp = 60 ## change to sample size for each resample
+n_rep = 1000 ## change to how many resamples you want in each bootstrap
+n_ci = 50 ## change to how many confidence intervals you want
+conf_level = 0.95 ## confidence level (as decimal)
+```
+
+```{r, run-this1,echo=FALSE}
+p <- 0.62 ## population parameter for "Yes"
+
+## run this chunk without changing anything, you don't have to understand the code in this chunk
+store_ci <- function(i, n, reps, conf_level, success) {
+  us_adults %>%
+    sample_n(size = n) %>%
+    specify(response = climate_change_affects, success = success) %>%
+    generate(reps, type = "bootstrap") %>%
+    calculate(stat = "prop") %>%
+    get_ci(level = conf_level) %>%
+    rename(
+      x_lower = names(.)[1],
+      x_upper = names(.)[2]
+    )
+}
+   toPlot =   map_dfr(1:n_ci, store_ci,
+        n = n_samp,
+        reps = n_rep, conf_level = conf_level,
+        success = "Yes"
+      ) %>%
+        mutate(
+          y_lower = 1:n_ci,
+          y_upper = 1:n_ci,
+          capture_p = ifelse(x_lower < p & x_upper > p, "Yes", "No")
+        )
+
+   
+
+     
+    
+```
+
+```{r, runthis2}
+ ggplot(toPlot) +
+        geom_segment(aes(x = x_lower, y = y_lower, xend = x_upper, yend = y_upper, color = capture_p)) +
+        geom_point(aes(x = x_lower, y = y_lower, color = capture_p)) +
+        geom_point(aes(x = x_upper, y = y_upper, color = capture_p)) +
+        geom_vline(xintercept = p, color = "darkgray") +
+        labs(
+          y = "", x = "Bounds of the confidence interval",
+          color = "Does the interval capture the true population proportion?"
+        ) +
+        theme(legend.position = "bottom")
+```

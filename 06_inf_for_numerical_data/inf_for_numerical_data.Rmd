@@ -28,6 +28,8 @@ You all should also feel free to ask and answer questions amongst yourselves via
 
 ## Getting Started
 
+Along with teaching you how to perform a hypothesis test in R, this lab also has components that will help you as you start your own exploration of a dataset for your final project.
+
 ### Load packages
 
 In this lab, we will explore and visualize the data using the **tidyverse** suite of 
@@ -68,28 +70,18 @@ numerical. The meaning of each variable can be found by bringing up the help fil
 ```
 
 
-1.  What are the cases in this data set? How many cases are there in our sample?
-
-Remember that you can answer this question by viewing the data in the data viewer or
-by using the following command:
-
-```{r str}
-glimpse(yrbss)
-```
+1.  What are the cases in this data set? How many cases are there in our sample? Remember that you can answer this question by viewing the data in the data viewer or by using `glimpse`.
 
 ## Exploratory data analysis
 
 You will first start with analyzing the weight of the participants in kilograms:
 `weight`.
 
-Using visualization and summary statistics, describe the distribution of weights.
-The `summary` function can be useful.
+1.  Use the `summary` function to determine how many observations we are missing weights from. Remember that you will need to specify the dataset and name of the variable you are interested in separated by `$`.
 
-```{r summary}
-summary(yrbss$weight)
-```
 
-1.  How many observations are we missing weights from?
+1.  Make an appropriate plot of `weight` (given its type) and describe it's distribution (center, spread, is it skewed or symmetric, how many modes does it have?) You may want to refer to the ggplot [cheat sheet](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) to remember the types of plots we know how to make.
+
 
 Next, consider the possible relationship between a high schooler's weight and their
 physical activity. Plotting the data is a useful first step because it helps 
@@ -105,8 +97,7 @@ yrbss <- yrbss %>%
 ```
 
 
-1.  Make a side-by-side boxplot of `physical_3plus` and `weight`. Is there a 
-relationship between these two variables? What did you expect and why?
+1.  Make a side-by-side boxplot of `physical_3plus` and `weight`. You may want to consult [this resource](http://www.sthda.com/english/wiki/ggplot2-box-plot-quick-start-guide-r-software-and-data-visualization) to help you make your plot. Is there a relationship between these two variables? What did you expect and why?
 
 The box plots show how the medians of the two distributions compare, but we can
 also compare the means of the distributions using the following to 
@@ -125,12 +116,9 @@ significant? In order to answer this question we will conduct a hypothesis test.
 
 ## Inference
 
-1.  Are all conditions necessary for inference satisfied? Comment on each. You can 
-compute the group sizes with the `summarize` command above by defining a new variable
-with the definition `n()`.
 
-1.  Write the hypotheses for testing if the average weights are different for those
-who exercise at least times a week and those who don't.
+1.  Write the null and alternative hypotheses for testing if the average weights are different for those
+who exercise at least times a week and those who don't. (no code necessary here)
 
 Next, we will introduce a new function, `hypothesize`, that falls into the `infer` 
 workflow. You will use this method for conducting hypothesis tests. 
@@ -175,7 +163,7 @@ ggplot(data = null_dist, aes(x = stat)) +
 ```
 
 
-1. How many of these `null` permutations have a difference of at least `obs_diff`?
+1. How many of these `null` permutations have a difference of at least `obs_diff`? Hint: take inspiration from `mutate(physical_3plus = ifelse(yrbss$physically_active_7d > 2, "yes", "no"))` to create a new column that has the yes/no answer you want and then use the `count` function.
 
 Now that the test is initialized and the null distribution formed, you can calculate
 the p-value for your hypothesis test using the function `get_p_value`.
@@ -185,34 +173,15 @@ null_dist %>%
   get_p_value(obs_stat = obs_diff, direction = "two_sided")
 ```
 
-This the standard workflow for performing hypothesis tests.
+This is the standard workflow for performing hypothesis tests.
 
-1.  Construct and record a confidence interval for the difference between the 
-weights of those who exercise at least three times a week and those who don't, and
-interpret this interval in context of the data.
+1. Report the statistical results. (is our result statistically significant at the 0.05 level? what are the implications for our hypotheses?)
 
 * * *
 
-## More Practice
-
-1.  Calculate a 95% confidence interval for the average height in meters (`height`)
-and interpret it in context.
-
-1.  Calculate a new confidence interval for the same parameter at the 90% 
-confidence level. Comment on the width of this interval versus 
-the one obtained in the previous exercise.
-
-1.  Conduct a hypothesis test evaluating whether the average height is different
-for those who exercise at least three times a week and those who don't.
-
-1.  Now, a non-inference task: Determine the number of different options there 
-are in the dataset for the `hours_tv_per_school_day` there are.
-
-1. Come up with a research question evaluating the relationship between height 
+1. Bonus: Come up with a research question evaluating the relationship between height 
 or weight and sleep. Formulate the question in a way that it can be answered using
-a hypothesis test and/or a confidence interval. Report the statistical results, 
-and also provide an explanation in plain language. Be sure to check all 
-assumptions, state your $\alpha$ level, and conclude in context.
+a hypothesis test.
 
 ## Deliverables
 
@@ -224,7 +193,7 @@ LastName-LastName-L-06.Rmd  (add a third last name if applicable)
 
 LastName-LastName-L-06.html
 
-*Due*: Wednesday, October 14th [because of Fall Break, but feel free to turn it in early] (beginning of class time, Eastern time)
+*Due*: Monday, October 19th (beginning of class time, Eastern time)
 
 
 

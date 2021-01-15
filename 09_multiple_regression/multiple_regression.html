@@ -511,7 +511,7 @@ summary {
 <div id="grading-the-professor" class="section level2">
 <h2>Grading the professor</h2>
 <p>Many college courses conclude by giving students the opportunity to evaluate the course and the instructor anonymously. However, the use of these student evaluations as an indicator of course quality and teaching effectiveness is often criticized because these measures may reflect the influence of non-teaching related characteristics, such as the physical appearance of the instructor. The article titled, “Beauty in the classroom: instructors’ pulchritude and putative pedagogical productivity” by Hamermesh and Parker found that instructors who are viewed to be better looking receive higher instructional ratings.</p>
-<p>Here, you will analyze the data from this study in order to learn what goes into a positive professor evaluation.</p>
+<p>Here, you will analyze the data from this study in order to learn what goes into a positive professor evaluation. The goal is to show you how to fit and evaluate the models that you will be using in your final project.</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
@@ -520,9 +520,7 @@ summary {
 <p>In this lab, you will explore and visualize the data using the <strong>tidyverse</strong> suite of packages. The data can be found in the companion package for OpenIntro resources, <strong>openintro</strong>.</p>
 <p>Let’s load the packages.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(openintro)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(GGally)</a></code></pre></div>
-<p>This is the first time we’re using the <code>GGally</code> package. You will be using the <code>ggpairs</code> function from this package later in the lab.</p>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(openintro)</a></code></pre></div>
 </div>
 <div id="creating-a-reproducible-lab-report" class="section level3">
 <h3>Creating a reproducible lab report</h3>
@@ -539,99 +537,73 @@ summary {
 <div id="exploring-the-data" class="section level2">
 <h2>Exploring the data</h2>
 <ol style="list-style-type: decimal">
-<li><p>Is this an observational study or an experiment? The original research question posed in the paper is whether beauty leads directly to the differences in course evaluations. Given the study design, is it possible to answer this question as it is phrased? If not, rephrase the question.</p></li>
-<li><p>Describe the distribution of <code>score</code>. Is the distribution skewed? What does that tell you about how students rate courses? Is this what you expected to see? Why, or why not?</p></li>
-<li><p>Excluding <code>score</code>, select two other variables and describe their relationship with each other using an appropriate visualization.</p></li>
+<li><p>Make a plot of the distribution of <code>score</code> and describe it. Is the distribution skewed?</p></li>
+<li><p>Make a plot of the relationship between <code>score</code> and beauty score <code>bty_avg</code> (we want to use beauty score to help us understand score) and describe this relationship.</p></li>
+<li><p>Adapt your plot from #2 by using <code>col = gender</code> within <code>aes</code> to see how the relationship differs by gender of the faculty member. (just code and plot here, no extra interpretation)</p></li>
 </ol>
 </div>
 <div id="simple-linear-regression" class="section level2">
 <h2>Simple linear regression</h2>
-<p>The fundamental phenomenon suggested by the study is that better looking teachers are evaluated more favorably. Let’s create a scatterplot to see if this appears to be the case:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> evals, <span class="kw">aes</span>(<span class="dt">x =</span> bty_avg, <span class="dt">y =</span> score)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p>Before you draw conclusions about the trend, compare the number of observations in the data frame with the approximate number of points on the scatterplot. Is anything awry?</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">base_model &lt;-<span class="st"> </span><span class="kw">lm</span>(score <span class="op">~</span><span class="st"> </span>bty_avg, <span class="dt">data =</span> evals)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">summary</span>(base_model)</a></code></pre></div>
+<p>Using <code>geom_smooth</code> and choosing <code>method = &quot;lm&quot;</code> will add the simple linear regression line to the plot.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">ggplot</span>(evals, <span class="kw">aes</span>(<span class="dt">x =</span> bty_avg, <span class="dt">y =</span> score)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> F)</a></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
-<li>Replot the scatterplot, but this time use <code>geom_jitter</code> as your layer to help us with potential overplotting (where multiple points cover one another, but we only see one). What was misleading about the initial scatterplot?</li>
+<li><p>Interpret this slope in context.</p></li>
+<li><p>The last column <code>Pr(&gt;|t|)</code> gives a p-value for the hypothesis test of statistical significance for each coefficient (in this case intercept and slope for <code>bty_avg</code>). In each case the null hypothesis is that the coefficient is equal to 0 and the alternative hypothesis is that the coefficient is not equal to zero. Is the intercept statistically significantly different from zero at the 0.01 signifcance level? How about the slope?</p></li>
 </ol>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> evals, <span class="kw">aes</span>(<span class="dt">x =</span> bty_avg, <span class="dt">y =</span> score)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_jitter</span>()</a></code></pre></div>
-<ol start="5" style="list-style-type: decimal">
-<li>Let’s see if the apparent trend in the plot is something more than natural variation. Fit a linear model called <code>m_bty</code> to predict average professor score by average beauty rating. Write out the equation for the linear model and interpret the slope. Is average beauty score a statistically significant predictor? Does it appear to be a practically significant predictor?</li>
-</ol>
-<p>Add the line of the bet fit model to your plot using the following:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> evals, <span class="kw">aes</span>(<span class="dt">x =</span> bty_avg, <span class="dt">y =</span> score)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_jitter</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</a></code></pre></div>
-<p>The blue line is the model. The shaded gray area around the line tells you about the variability you might expect in your predictions. To turn that off, use <code>se = FALSE</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> evals, <span class="kw">aes</span>(<span class="dt">x =</span> bty_avg, <span class="dt">y =</span> score)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_jitter</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+</div>
+<div id="parallel-slopes" class="section level2">
+<h2>Parallel Slopes</h2>
+<p>A parallel slope approach is denoted with a plus sign between two covariates.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">parallel_slopes_model &lt;-<span class="st"> </span><span class="kw">lm</span>(score <span class="op">~</span><span class="st"> </span>bty_avg <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data =</span> evals)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">summary</span>(parallel_slopes_model)</a></code></pre></div>
+<p>We can use <code>geom_abline</code> to specify the slope and intercept for each category so that we can draw two lines on the plot. When plotting two categories, #00BFC4 is the default color for the reference category and “#F8766D” is the default color for a second category, so we specify those to match the points. In your projects, you might want to do this more automatically. See <a href="https://moderndive.github.io/moderndive/reference/geom_parallel_slopes.html">this reference</a> for guidance.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">ggplot</span>(evals, <span class="kw">aes</span>(bty_avg, score, <span class="dt">col =</span> gender)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="fl">0.07416</span>, <span class="dt">intercept =</span> <span class="fl">3.74734</span>, <span class="dt">col =</span> <span class="st">&quot;#00BFC4&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="fl">0.07416</span>, <span class="dt">intercept =</span> <span class="fl">3.74734</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.17239</span>, <span class="dt">col =</span> <span class="st">&quot;#F8766D&quot;</span>)</a></code></pre></div>
 <ol start="6" style="list-style-type: decimal">
-<li>Use residual plots to evaluate whether the conditions of least squares regression are reasonable. Provide plots and comments for each one (see the Simple Regression Lab for a reminder of how to make these).</li>
+<li>Write the equation of the regression line for females.</li>
 </ol>
-</div>
-<div id="multiple-linear-regression" class="section level2">
-<h2>Multiple linear regression</h2>
-<p>The data set contains several variables on the beauty score of the professor: individual ratings from each of the six students who were asked to score the physical appearance of the professors and the average of these six scores. Let’s take a look at the relationship between one of these scores and the average beauty score.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> evals, <span class="kw">aes</span>(<span class="dt">x =</span> bty_f1lower, <span class="dt">y =</span> bty_avg)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">evals <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">cor</span>(bty_avg, bty_f1lower))</a></code></pre></div>
-<p>As expected, the relationship is quite strong—after all, the average score is calculated using the individual scores. You can actually look at the relationships between all beauty variables (columns 13 through 19) using the following command:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">evals <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">&quot;bty&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">  </span><span class="kw">ggpairs</span>()</a></code></pre></div>
-<p>These variables are collinear (correlated), and adding more than one of these variables to the model would not add much value to the model. This is because <em>given</em> information about one of the variables, the other one doesn’t add much new information. In this application and with these highly-correlated predictors, it is reasonable to use the average beauty score as the single representative of these variables.</p>
-<p>In order to see if beauty is still a significant predictor of professor score after you’ve accounted for the professor’s gender, you can add the gender term into the model.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">m_bty_gen &lt;-<span class="st"> </span><span class="kw">lm</span>(score <span class="op">~</span><span class="st"> </span>bty_avg <span class="op">+</span><span class="st"> </span>gender, <span class="dt">data =</span> evals)</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw">summary</span>(m_bty_gen)</a></code></pre></div>
-<ol start="7" style="list-style-type: decimal">
-<li><p>P-values and parameter estimates should only be trusted if the conditions for the regression are reasonable. Verify that the conditions for this model are reasonable using diagnostic plots.</p></li>
-<li><p>Is <code>bty_avg</code> still a significant predictor of <code>score</code>? Has the addition of <code>gender</code> to the model changed the parameter estimate for <code>gender</code>?</p></li>
-</ol>
-<p>Note that the estimate for <code>gender</code> is now called <code>gendermale</code>. You’ll see this name change whenever you introduce a categorical variable. The reason is that R recodes <code>gender</code> from having the values of <code>male</code> and <code>female</code> to being an indicator variable called <code>gendermale</code> that takes a value of <span class="math inline">\(0\)</span> for female professors and a value of <span class="math inline">\(1\)</span> for male professors. (Such variables are often referred to as “dummy” variables.)</p>
-<p>As a result, for female professors, the parameter estimate is multiplied by zero, leaving the intercept and slope form familiar from simple regression.</p>
-<p><span class="math display">\[
-  \begin{aligned}
-\widehat{score} &amp;= \hat{\beta}_0 + \hat{\beta}_1 \times bty\_avg + \hat{\beta}_2 \times (0) \\
-&amp;= \hat{\beta}_0 + \hat{\beta}_1 \times bty\_avg\end{aligned}
+<p>You may want to refer to this sample formatting in the Rmd to make it look “nice”. <span class="math display">\[
+  \hat{y} = 4.61707 + 0.49143 \times pf\_expression\_control
 \]</span></p>
-<!-- We can plot this line and the line corresponding to those with color pictures
-with the following  -->
-<!-- custom function. -->
-<!-- ```{r twoLines} -->
-<!-- ggplot(data = evals, aes(x = bty_avg, y = score, color = pic_color)) + -->
-<!--   geom_smooth(method = "lm", formula = y ~ x, se = FALSE) -->
-<!-- ``` -->
-<ol start="9" style="list-style-type: decimal">
-<li>What is the equation of the line corresponding to those with color pictures? (<em>Hint:</em> For those with color pictures, the parameter estimate is multiplied by 1.) For two professors who received the same beauty rating, which color picture tends to have the higher course evaluation score?</li>
-</ol>
-<p>The decision to call the indicator variable <code>gendermale</code> instead of <code>genderfemale</code> has no deeper meaning. R simply codes the category that comes first alphabetically as a <span class="math inline">\(0\)</span>. (You can change the reference level of a categorical variable, which is the level that is coded as a 0, using the<code>relevel()</code> function. Use <code>?relevel</code> to learn more.)</p>
-<ol start="10" style="list-style-type: decimal">
-<li>Create a new model called <code>m_bty_rank</code> with <code>gender</code> removed and <code>rank</code> added in. How does R appear to handle categorical variables that have more than two levels? Note that the rank variable has three levels: <code>teaching</code>, <code>tenure track</code>, <code>tenured</code>.</li>
-</ol>
-<p>The interpretation of the coefficients in multiple regression is slightly different from that of simple regression. The estimate for <code>bty_avg</code> reflects how much higher a group of professors is expected to score if they have a beauty rating that is one point higher <em>while holding all other variables constant</em>. In this case, that translates into considering only professors of the same rank with <code>bty_avg</code> scores that are one point apart.</p>
 </div>
-<div id="the-search-for-the-best-model" class="section level2">
-<h2>The search for the best model</h2>
-<p>We will start with a full model that predicts professor score based on rank, gender, ethnicity, language of the university where they got their degree, age, proportion of students that filled out evaluations, class size, course level, number of professors, number of credits, average beauty rating, outfit, and picture color.</p>
-<ol start="11" style="list-style-type: decimal">
-<li>Which variable would you expect to have the highest p-value in this model? Why? <em>Hint:</em> Think about which variable would you expect to not have any association with the professor score.</li>
+<div id="interaction-model" class="section level2">
+<h2>Interaction Model</h2>
+<p>An interaction is denoted as a product (*) between two covariates.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">interaction_model &lt;-<span class="st"> </span><span class="kw">lm</span>(score <span class="op">~</span><span class="st"> </span>bty_avg <span class="op">*</span><span class="st"> </span>gender, <span class="dt">data =</span> evals)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">summary</span>(interaction_model)</a></code></pre></div>
+<p>Using <code>geom_smooth</code> and choosing <code>method = &quot;lm&quot;</code> will add the interaction linear regression line to the plot (ggplot knows to make a different line per gender because the points are colored by gender).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">ggplot</span>(evals, <span class="kw">aes</span>(<span class="dt">x =</span> bty_avg, <span class="dt">y =</span> score, <span class="dt">col =</span> gender)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> F)</a></code></pre></div>
+<ol start="7" style="list-style-type: decimal">
+<li>Write the equation of the regression line for females.</li>
 </ol>
-<p>Let’s run the model…</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">m_full &lt;-<span class="st"> </span><span class="kw">lm</span>(score <span class="op">~</span><span class="st"> </span>rank <span class="op">+</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>ethnicity <span class="op">+</span><span class="st"> </span>language <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>cls_perc_eval </a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">             <span class="op">+</span><span class="st"> </span>cls_students <span class="op">+</span><span class="st"> </span>cls_level <span class="op">+</span><span class="st"> </span>cls_profs <span class="op">+</span><span class="st"> </span>cls_credits <span class="op">+</span><span class="st"> </span>bty_avg </a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">             <span class="op">+</span><span class="st"> </span>pic_outfit <span class="op">+</span><span class="st"> </span>pic_color, <span class="dt">data =</span> evals)</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw">summary</span>(m_full)</a></code></pre></div>
-<ol start="12" style="list-style-type: decimal">
-<li><p>Check your suspicions from the previous exercise. Include the model output in your response.</p></li>
-<li><p>Interpret the coefficient associated with the ethnicity variable.</p></li>
-<li><p>Verify that the conditions for this model are reasonable using diagnostic plots.</p></li>
-<li><p>Drop the variable with the highest p-value and re-fit the model. Did the coefficients and significance of the other explanatory variables change? (One of the things that makes multiple regression interesting is that coefficient estimates depend on the other variables that are included in the model.) If not, what does this say about whether or not the dropped variable was collinear with the other explanatory variables?</p></li>
-<li><p>The original paper describes how these data were gathered by taking a sample of professors from the University of Texas at Austin and including all courses that they have taught. Considering that each row represents a course, could this new information have an impact on any of the conditions of linear regression?</p></li>
-<li><p>Based on the <code>m_full</code> model, describe the characteristics of a professor and course at University of Texas at Austin that would be associated with a high evaluation score.</p></li>
-<li><p>Would you be comfortable generalizing your conclusions to apply to professors generally (at any university)? Why or why not?</p></li>
+</div>
+<div id="which-is-best" class="section level2">
+<h2>Which is best?</h2>
+<ol start="8" style="list-style-type: decimal">
+<li>One way to define “best” is to consider how much of the variability in the scores are explained by the model. Compare the multiple R-squared values for these three models. Based on this criteria, which model is “best”?</li>
 </ol>
+</div>
+<div id="checking-conditions" class="section level2">
+<h2>Checking conditions</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">modelToUse =<span class="st"> </span><span class="co">## add name of your chosen model to the right of this equal sign</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">  </span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">ggplot</span>(<span class="dt">data =</span> modelToUse, <span class="kw">aes</span>(<span class="dt">x =</span> .resid)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">25</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Residuals&quot;</span>)</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="kw">ggplot</span>(<span class="dt">data =</span> modelToUse, <span class="kw">aes</span>(<span class="dt">x =</span> .fitted, <span class="dt">y =</span> .resid)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Fitted values&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Residuals&quot;</span>)</a></code></pre></div>
+<ol start="9" style="list-style-type: decimal">
+<li>We’ve assessed linearity in Exercise 2, but are the other two conditions met for the model you chose as “best”? (normality of residuals and constant variance)</li>
+</ol>
+</div>
+<div id="finished-early" class="section level2">
+<h2>Finished early?</h2>
+<p>Talk to you partner(s) about any questions you have for the exam. Alternatively, rejoin the main Zoom room if you have exam related questions, and I’ll answer them in between helping groups with the lab.</p>
 </div>
 <div id="deliverables" class="section level2">
 <h2>Deliverables</h2>
@@ -639,7 +611,7 @@ with the following  -->
 <p>Submit your Markdown document and knitted file to <a href="https://moodle.smith.edu/">Moodle</a> as:</p>
 <p>LastName-LastName-L-08.Rmd (add a third last name if applicable)</p>
 <p>LastName-LastName-L-08.html</p>
-<p><em>Due</em>: Monday, November 2nd (beginning of class time, Eastern time)</p>
+<p><em>Due</em>: Friday, November 6th (beginning of class time, Eastern time)</p>
 <hr />
 <p><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="data:image/png;base64,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" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a> and was adapted by Sara Stoudt.</p>
 </div>

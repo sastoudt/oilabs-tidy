@@ -1,17 +1,112 @@
 ---
 title: "When the bootstrap fails"
-output:
-  html_document:
-    theme: cerulean
-    highlight: pygments
-    css: ../lab.css
-    toc: true
-    toc_float: true
+author: "Sara Stoudt"
+date: "11/15/2020"
+output: html_document
 ---
 
-```{r global-options, include=FALSE}
-knitr::opts_chunk$set(eval = TRUE, results = FALSE, fig.show = "hide", message = FALSE)
-library(tidyverse)
-library(openintro)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(tidyverse)
+library(infer)
+```
+
+Note: you cannot knit this until you have filled in some code chunks.
+
+Because this is an experimental lab, it will be graded out of 25 instead of 50 to lower the weight towards your grade and (hopefully) lower the stress involved.
+
+## Small Data
+
+The national metrology (measurement science) institute of Argentina made triplicate determinations of the mass fraction of fructose in honey using
+high-performance liquid chromatography, and obtained the following values.
+
+```{r}
+fructose_measurements <- data.frame(measured = c(39.5, 39.3, 40.3))
+```
+
+
+1. Use R code to get 50 resamplings of three measurements each (with replacement). Name this dataframe `bootstrap_samples`.
+
+```{r}
+bootstrap_samples <- ## fill in here
+
+head(bootstrap_samples)
+```
+
+I want to know how many of these are duplicates. For each replicate I note which number is the minimum, the maximum, and in the middle.
+
+```{r}
+bootstrap_samples_organize <- bootstrap_samples %>%
+  group_by(replicate) %>%
+  summarise(min = min(measured), middle = sort(measured)[2], max = max(measured))
+```
+
+Now I can look for unique rows. 
+
+2. Use an R command to take out the replicate number column (since that will make every row different) and save this new dataframe as `no_replicate_column`. 
+
+```{r}
+no_replicate_column <- ## fill in here
+```
+
+3. How many unique rows are there? Use an R command, not a visual inspection approach.
+
+```{r}
+unique_samples <- no_replicate_column %>% distinct()
+
+head(unique_samples)
+```
+
+Now I want to know how many times these are duplicated. 
+
+4. What is the maximum number of duplications? The minimum? Use R commands, not a visual inspection approach.
+
+```{r}
+duplicate_info <- bootstrap_samples_organize %>% select(-replicate) %>% group_by_all() %>% summarise(count = n())
+
+head(duplicate_info)
+```
+
+5. Based on this example, explain why small data causes the bootstrap approach to break down.
+
+
+## Skewed Data
+
+Download the data file and make sure it is in the same folder as this R Markdown file before reading it in. This is a random sample of repair times for different groups of Verizon customers.
+
+[Data Source](https://cran.r-project.org/web/packages/resampledata/resampledata.pdf)
+
+```{r}
+verizon <- read.csv("verizon_data.csv")
+
+head(verizon)
+
+unique(Verizon$Group)
+```
+
+6. Make two histograms of the two groups' wait times. These can be on the same plot or in two separate plots.
+
+7. To see the impact of skewness on the effectiveness of the bootstrap skim Sections 4.4 and 4.5 in [this paper](https://arxiv.org/pdf/1411.5279.pdf). (A PDF version is also uploaded to Moodle.) By skimming, I mean do not get hung up on details you don't understand, just gloss right over them and move on. This is how I approach academic papers the first time around (try to get the main points and worry about details later).
+
+This is a formal statistics paper, and I do not expect you to understand everything (or even 50% of it). However, for each section give me one fact that you learned from it (or if everything is unclear, ask me one question you have based on the text per section).
+
+## Deliverables
+
+When you are finished editing your Markdown document click the "Knit" button and choose "Knit to HTML" in the top left corner of RStudio. This will run all of your code and create a formatted document of the output.  If you get an error, it means something in your Markdown file isn't right, either an error in code or some error in formatting. Call me into your breakout room, and we will troubleshoot.
+
+Submit your Markdown document and knitted file to [Moodle](https://moodle.smith.edu/) as:
+
+LastName-LastName-L-10.Rmd  (add a third last name if applicable)
+
+LastName-LastName-L-10.html
+
+*Due*: Monday, November 23rd (beginning of class time, Eastern time)
+
+
+
+* * *
+
+This work was created by Sara Stoudt.

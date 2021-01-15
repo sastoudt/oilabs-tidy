@@ -1,0 +1,68 @@
+---
+title: "Lab Name"
+author: "Author Name"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+```
+
+### Exercise 1
+
+typical streak - 0
+longest streak - 4
+
+```{r code-chunk-label}
+kobe_streak <- calc_streak(kobe_basket$shot)
+
+head(kobe_streak)
+
+ggplot(data = kobe_streak, aes(x = length)) +
+  geom_bar()
+
+```
+
+### Exercise 2
+
+About 20
+
+```{r}
+coin_outcomes <- c("heads", "tails")
+
+sim_unfair_coin <- sample(coin_outcomes, size = 100, replace = TRUE, 
+                          prob = c(0.2, 0.8))
+
+table(sim_unfair_coin)
+```
+### Exercise 3
+
+```{r}
+shot_outcomes <- c("H", "M")
+sim_basket <- sample(shot_outcomes, size = 133, replace = TRUE, prob = c(0.45, 1-0.45))
+```
+
+### Exercise 4
+
+mode: 1
+max: 4
+```{r}
+sim_streak <- calc_streak(sim_basket)
+
+```
+
+### Exercise 5
+
+```{r}
+
+ggplot(data = kobe_streak, aes(x = length)) +
+  geom_bar()+ylim(0,50)+xlim(0,6)
+
+ggplot(data = sim_streak, aes(x = length)) +
+  geom_bar()+ylim(0,50)+xlim(0,6)
+
+```
+
+The simulated shots using the independence assumption have many higher streaks than Kobe's shots. The distributions appear similar in shape except for the independent distribution having more right skew. If the hot hand model were correct for Kobe, we'd expect Kobe's distribution to be more right skewed than the random independent model. This does not appear to be the case

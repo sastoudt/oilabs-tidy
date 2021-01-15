@@ -115,7 +115,7 @@ samp <- us_adults %>%
 
 ### Exercise 1
 
-Just like we did with the population, we can calculate the proportion of those **in this sample** who think climate change affects their local community. What percent of the adults in your sample think climate change affects their local community? 
+Just like we did with the population, we can calculate the proportion of those **in this sample** who think climate change affects their local community. What percent of the adults in your sample think climate change affects their local community? **Hint**: we did something similar in the `summ-stat-pop` chunk.
 
 
 
@@ -174,13 +174,21 @@ To recap: even though we don't know what the full population looks like, we're 9
 
 In this case, you have the rare luxury of knowing the true population proportion (62%) since you have data on the entire population. 
 
-### Exercise 2
+### Exercise 2 
 
-Depending on the choice of seed, different people should have gotten a slightly different confidence interval. What proportion of those intervals (across other students working on this lab) would you expect to capture the true population mean? Why?
+Depending on the choice of seed, different people should have gotten a slightly different confidence interval. 
+
+a.) Copy and paste `confidence_interval_infer` chunk to your lab report. Does your confidence interval capture the true population proportion of US adults who think climate change affects their local community? Be sure to state the true population proportion in your answer.
+
+b.) Copy and paste the `sample` chunk here and calculate the proportion of those **in this new sample** who think climate change affects their local community as you did in Exercise 1. Rename `samp` to `new_samp`.
+
+c.) Copy and paste the `confidence_interval_infer` chunk here and calculate the 95% confidence interval from this new sample. Remember that you have a new dataframe to start with.
+
+d.) Does this new interval capture the true population proportion?
     
 ### Exercise 3
 
-Following the example from code chunk `confidence_interval_infer` and data from the one sample you have 
+Following the example from code chunk `confidence_interval_infer` and data from the original sample you have 
 (`samp`), find a confidence interval for the proportion of US Adults who think climate change is affecting their local community with a confidence level of your choosing (other than 95%) and interpret it.
     
 ### Exercise 4
@@ -189,7 +197,9 @@ Repeat the code found in code chunk `confidence_interval_infer` but change boots
 
 a.) How does the width of the interval change as you decrease the number of bootstrap samples? 
 
-b.) Does changing the number of bootstap samples affect the standard error?
+b.) Does changing the number of bootstap samples affect the standard error? **Hint:** Remember that a 95% confidence interval is roughly our original estimate +/- 2*SE. (no code expected for this one)
+
+Note that in Lab 3 we changed the original sample size to see how that affected the standard error. The distinction here is we are now changing the number of times to resample, given an original sample size.
 
 ## Getting Fancy
 
@@ -201,25 +211,25 @@ In the next part of the lab, you will collect many samples to learn more about h
 
 Doing this would require learning programming concepts like iteration so that you can automate repeating running the code you've developed so far many times to obtain many (50) confidence intervals. In order to keep the programming simpler, we are providing code that does this for you. You just need to specify parameters.
 
-### Exercise 4
+### Exercise 5
 
-a.) Change values in the `parameters` code chunk so that you have a sample size of 60, 1000 bootstrap samples for each interval, 50 confidence intervals, and a confidence level of your choice. 
+a.) Copy and paste `parameters`, `runthis1`, and `runthis2` chunks to your lab report. Change values in the `parameters` code chunk so that you have a sample size of 60, 1000 bootstrap samples for each interval, 50 confidence intervals, and a confidence level of your choice. 
 
-b.) Then run the code in the `run-this1` chunk to determine what proportion of your confidence intervals include the true population proportion. The plot in the `run-this2` chunk can help you visualize the answer, but I'm looking for you to use some `dplyr` verbs to manipulate `toPlot`. **Hint**: You want to `count` each of the two `group`s in `capture_p`. 
+b.) Then run the code in the `run-this1` chunk and determine what proportion of your confidence intervals include the true population proportion. The plot in the `run-this2` chunk can help you visualize the answer, but I'm looking for you to use some code to manipulate `toPlot`. **Hint**: Think back to Exercise 1.
 
-c.) Is this proportion exactly equal to the confidence level? If not, explain why. 
+c.) Is this proportion exactly equal to the confidence level? If not, explain why. (no code for this one)
 
 ```{r, parameters}
 ## change these parameters
 
 n_samp = 50 ## change to sample size for each resample
-n_rep = 1000 ## change to how many resamples you want in each bootstrap
+n_rep = 500 ## change to how many resamples you want in each bootstrap
 n_ci = 5 ## change to how many confidence intervals you want
 conf_level = 0.8 ## confidence level (as decimal)
 ```
 
 ```{r, run-this1,echo=FALSE}
-p <- 0.62 ## population parameter for "Yes"
+p <- 0.62 ## population parameter for proportion of "Yes"
 
 ## run this chunk without changing anything, you don't have to understand the code in this chunk
 store_ci <- function(i, n, reps, conf_level, success) {

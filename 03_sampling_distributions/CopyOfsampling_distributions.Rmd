@@ -122,6 +122,7 @@ samp1 <- global_monitor %>%
   slice_sample(n = 50)
 ```
 
+
 This command collects a simple random sample of size 50 from the `global_monitor` dataset, and assigns the result to `samp1`. 
 This is similar to randomly drawing names from a hat that contains the names of all in the population.
 Working with these 50 names is considerably simpler than working with all 100,000 people in the population.
@@ -135,6 +136,11 @@ Working with these 50 names is considerably simpler than working with all 100,00
     `p` since you're now calculating a sample statistic, not a population parameters. 
     You can customize the label of the statistics to indicate that it comes from 
     the sample.
+    
+```{r}
+global_monitor %>% count(scientist_work) %>% mutate(p = n /sum(n))
+samp1 %>% count(scientist_work) %>%  mutate(phat = n /sum(n))
+```
 
 If you're interested in estimating the proportion of all people who do not believe that the work scientists do benefits them, but you do not have access to the population data, your best single guess is the sample mean.
 
