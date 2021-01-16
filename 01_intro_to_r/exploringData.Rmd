@@ -29,7 +29,7 @@ data(arbuthnot)
 Let's start to examine the data a little more closely. We can access the data in
 a single column of a data frame separately.
 
-```{r view-boys, exercise = T}
+```{r view_boys, exercise = T}
 arbuthnot$boys
 ```
 
@@ -39,15 +39,21 @@ The dollar sign basically says "go to the data frame that comes before me, and f
 What command would you use to extract just the counts of girls baptized? Try
    it!
    
-```{r viewG, exercise = T}
-___$___
+```{r bsuxldualklhfikm, exercise = TRUE}
+____$____
 ```
 
-```{r viewG-solution}
+```{r bsuxldualklhfikm-solution}
+# solution code
 arbuthnot$girls
 ```
 
-    
+```{r bsuxldualklhfikm-check}
+# check code
+gradethis::grade_code()
+```   
+   
+
 Notice that the way R has printed these data is different. When we looked at the complete data frame, we saw 82 rows, one on each line of the display. 
 These data are no longer structured in a table with other variables, so they are displayed  one right after another. 
 Objects that print out in this way are called *vectors*; they represent a set of numbers. 
@@ -90,29 +96,39 @@ To learn what a function does and its arguments that are available to you, use t
 How would you create a plot that would help you answer the following question:
 Is there an apparent trend in the number of boys baptized over the years? 
 
-                              
-```{r plot-boys-vs-year-point, exercise = T}
+```{r uvwytbuptygmgteg, exercise = TRUE}
 ggplot(data = ___, aes(x = ___, y = ___)) + 
   geom_point()
 ```
 
 
-```{r plot-boys-vs-year-point-solution}
+```{r uvwytbuptygmgteg-solution}
 ggplot(data = arbuthnot, aes(x =year, y = boys)) + 
   geom_point()
 ```
 
+```{r uvwytbuptygmgteg-check}
+# check code
+gradethis::grade_code()
+```
+
+
 What if you wanted a line instead of points?
 
-```{r plot-boys-vs-year-line, exercise = T}
+```{r dbrizoftmfcrxtaa, exercise = TRUE}
 ggplot(data = ___, aes(x = ___, y = ___)) + ___
 ```
 
-
-```{r plot-boys-vs-year-line-solution}
-ggplot(data = arbuthnot, aes(x =year, y = boys)) + 
+```{r dbrizoftmfcrxtaa-solution}
+ggplot(data = arbuthnot, aes(x = year, y = boys)) + 
   geom_line()
 ```
+
+```{r dbrizoftmfcrxtaa-check}
+# check code
+gradethis::grade_code()
+```
+
 
 ## R as a big calculator
 
@@ -200,18 +216,27 @@ Note that we are using the new `total` variable we created earlier in our calcul
 
 Generate a plot of the proportion of boys born over time. What do you see? 
 
-```{r plot-prop-boys, exercise = T}
+```{r gamhocknhqyetwzh-setup}
+arbuthnot <- arbuthnot %>% mutate(total = boys + girls) %>%
+  mutate(boy_ratio = boys / total)
+```
+
+
+```{r gamhocknhqyetwzh, exercise = TRUE}
 ggplot(data = ___, aes(x = ___, y = ___)) + 
   geom_line()
 ```
 
-```{r plot-prop-boys-solution}
-arbuthnot <- arbuthnot %>% mutate(total = boys + girls) %>%
-  mutate(boy_ratio = boys / total)
-
+```{r gamhocknhqyetwzh-solution}
 ggplot(data = arbuthnot, aes(x =year, y = boy_ratio)) + 
   geom_line()
 ```
+
+```{r gamhocknhqyetwzh-check}
+# check code
+gradethis::grade_code()
+```
+
 
 Finally, in addition to simple mathematical operators like subtraction and division, you can ask R to make comparisons like greater than, `>`, less than, `<`, and equality, `==`. 
 For example, we can ask if the number of births of boys outnumber that of girls in each year with the expression
@@ -244,44 +269,57 @@ arbuthnot %>%
 
 What years are included in the `present` data set? 
 
-```{r range, exercise = T}
+```{r mnepkpmfycyaglup, exercise = TRUE}
 ___ %>%
   summarise(min = min(___), max = max(___))
 ```
 
-```{r range-solution}
+```{r mnepkpmfycyaglup-solution}
 present %>%
   summarise(min = min(year), max = max(year))
+```
+
+```{r mnepkpmfycyaglup-check}
+# check code
+gradethis::grade_code()
 ```
 
 
 What are the dimensions of the data frame? 
 
-```{r dim, exercise = T}
+```{r sugtdrmmiufgrtna, exercise = TRUE}
 glimpse(___)
 ```
 
-You want it to look like this.
-
-```{r dim-solution}
+```{r sugtdrmmiufgrtna-solution}
+# solution code
 glimpse(present)
+```
+
+```{r sugtdrmmiufgrtna-check}
+# check code
+gradethis::grade_code()
 ```
 
 What are the variable (column) names?
 
-```{r names, exercise = T}
+```{r xbsmvzydkxccmsuq, exercise = TRUE}
 names(___)
 ```
 
-You want it to look like this.
 
-```{r names-solution}
+```{r xbsmvzydkxccmsuq-solution}
 names(present)
 ```
-  
+
+```{r xbsmvzydkxccmsuq-check}
+# check code
+gradethis::grade_code()
+```
+
 How do these counts compare to Arbuthnot's? 
 
-```{r compare, exercise = T}
+```{r dvyabiubuhojtxtq, exercise = TRUE}
 arbuthnot %>%
   summarise(min = min(boys), max = max(boys))
 
@@ -289,12 +327,17 @@ ___ %>%
    summarise(min = min(boys), max = max(boys))
 ```
 
-```{r compare-solution}
+```{r dvyabiubuhojtxtq-solution}
 arbuthnot %>%
   summarise(min = min(boys), max = max(boys))
 
 present %>% 
    summarise(min = min(boys), max = max(boys))
+```
+
+```{r dvyabiubuhojtxtq-check}
+# check code
+gradethis::grade_code()
 ```
 
 
@@ -309,9 +352,9 @@ question("Are they of a similar magnitude?",
 ```
 
 
-Make a plot that displays the proportion of boys born over time. 
+Make a plot that displays the proportion of boys born over time.
 
-```{r plot-prop-boys-2, exercise = T}
+```{r azqsikgawshsgegl, exercise = TRUE}
 present <- present %>% mutate(boy_ratio = ___)
 
 ggplot(data = ___, aes(x = ___, y = ___)) + 
@@ -319,12 +362,18 @@ ggplot(data = ___, aes(x = ___, y = ___)) +
 ```
 
 
-```{r plot-prop-boys-2-solution}
+```{r azqsikgawshsgegl-solution}
 present <- present %>% mutate(boy_ratio = boys/(boys+girls))
 
 ggplot(data = present, aes(x = year, y = boy_ratio)) + 
   geom_line()
 ```
+
+```{r azqsikgawshsgegl-check}
+# check code
+gradethis::grade_code()
+```
+
 
 
 ```{r obs-hold}
@@ -337,15 +386,12 @@ question("Does Arbuthnot's observation about boys being born in greater proporti
 ```
 
 
-
-
 In what year did we see the most total number of births in the U.S.? *Hint:*
 First calculate the totals and save it as a new variable. Then, sort your
 dataset in descending order based on the total column. We can arrange the data 
 in a descending order with another function: `desc` (for descending order).
 
-
-```{r sample-arrange, exercise = T}
+```{r owhverfechvpqajl, exercise = TRUE}
 present <- present %>%
   mutate(total = ___)
 
@@ -354,8 +400,8 @@ present %>%
 ```
 
 
-
-```{r sample-arrange-solution}
+```{r owhverfechvpqajl-solution}
+# solution code
 present <- present %>%
   mutate(total = boys + girls)
 
@@ -363,3 +409,23 @@ present %>%
   arrange(desc(total))
 ```
 
+```{r owhverfechvpqajl-check}
+# check code
+gradethis::grade_code()
+```
+
+## Submit progress
+
+```{r context="server"}
+learnrhash::encoder_logic()
+```
+
+```{r encode, echo=FALSE}
+learnrhash::encoder_ui(
+  ui_before = div(strong("Submit your hash in the form below."), br(), br()),
+  ui_after  = learnrhash::iframe_ui(
+    src = "https://docs.google.com/forms/", ## change link, include name
+    width="900px", height= "1000px"
+  )
+)
+```
