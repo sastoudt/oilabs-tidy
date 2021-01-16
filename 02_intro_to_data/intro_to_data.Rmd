@@ -42,7 +42,7 @@ summaries of data on these flights and explore delay times. Since this is a larg
 data set, along the way you'll also learn the indispensable skills of data 
 processing and subsetting.
 
-## Load packages
+### Load packages
 
 In this lab, we will explore and visualize the data using the **tidyverse** suite of 
 packages. The data can be found in the companion package for OpenIntro labs, **openintro**.
@@ -131,7 +131,7 @@ With `ggplot()`:
 
 For instance, if you wanted to visualize the above plot using a line graph, you would replace `geom_point()` with `geom_line()`.
 
-## Departure delays
+### Departure delays
 
 Let's start by examing the distribution of departure delays of all flights with a 
 histogram.
@@ -159,7 +159,7 @@ ggplot(data = nycflights, aes(x = dep_delay)) +
 
 Look carefully at these three histograms. How do they compare? 
 
-```{r magnitude}
+```{r bandwidth}
 question("Are features revealed in one that are obscured in another?",
     answer("No, they look the same."),
     answer("Yes, more detail is shown with a binwidth of 15.", correct = T),
@@ -264,30 +264,44 @@ flights headed to SFO **or** in February, you can use the `|` instead of the com
 Create a new data frame that includes flights headed to SFO in June, 
     and save this data frame as `sfo_june_flights`. 
     
-```{r filter_feb, exercise = T}
+```{r filterfeb, exercise = TRUE}
 ___ <- ___ %>% ___(dest == ___, month == ___)
-
 ```
 
 ```{r filterfeb-solution}
 sfo_june_flights <- nycflights %>% filter(dest == "SFO", month == 6)
+```
+
+```{r filterfeb-check}
+# check code
+gradethis::grade_code()
+```
+    
+How many flights meet these criteria? **Hint:** How many rows are in `sfo_feb_flights`? To learn what a function does and its arguments that are available to you, use the "Help" tab in the bottom right. Try this for `dim` and `nrow`. 
+
+```{r dimflights-setup}
+sfo_june_flights <- nycflights %>% filter(dest == "SFO", month == 6)
 
 ```
 
-How many flights meet these criteria? **Hint:** How many rows are in `sfo_feb_flights`? To learn what a function does and its arguments that are available to you, use the "Help" tab in the bottom right. Try this for `dim` and `nrow`. 
-
-```{r dimFlights, exercise = T}
+```{r dimflights, exercise = TRUE}
 dim(___)
 
 nrow(___)
 ```
 
 
-```{r dimFlights-solution}
+```{r dimflights-solution}
 dim(sfo_june_flights)
 
 nrow(sfo_june_flights)
 ```
+
+```{r dimflights-check}
+# check code
+gradethis::grade_code()
+```
+
 
 ## Summary statistics
 
@@ -304,23 +318,48 @@ sfo_feb_flights %>%
 Here, we first grouped the data by `origin` and then calculated the summary 
 statistics.
 
-1.  Calculate the median and interquartile range for `arr_delay`s of flights in
-    in the `sfo_feb_flights` data frame, grouped by carrier. Which carrier
-    has the most variable arrival delays?
+Calculate the median and interquartile range for `arr_delay`s of flights in the `sfo_feb_flights` data frame, grouped by carrier. 
 
-```{r summary-custom-list-carrier, exercise = T}
+```{r summarycarrier-setup}
+sfo_feb_flights <- nycflights %>%
+  filter(dest == "SFO", month == 2)
+```
+
+```{r summarycarrier, exercise = TRUE}
+___ %>%
+  ___(___) %>%
+  ___(median_dd = ___(___), iqr_dd = ___(___))
+```
+
+```{r summarycarrier-hint-1}
 sfo_feb_flights %>%
   ___(___) %>%
   summarise(median_dd = ___(arr_delay), iqr_dd = ___(arr_delay))
 ```
-    
-```{r summary-custom-list-carrier-solution}
-sfo_feb_flights <- nycflights %>%
-  filter(dest == "SFO", month == 2)
 
+```{r summarycarrier-solution}
 sfo_feb_flights %>%
   group_by(carrier) %>%
   summarise(median_dd = median(arr_delay), iqr_dd = IQR(arr_delay))
+
+```
+
+```{r summarycarrier-check}
+# check code
+gradethis::grade_code()
+```
+
+
+
+```{r whichcarrier}
+question("Which carrier has the most variable arrival delays?",
+    answer("AA"),
+    answer("B6"),
+    answer("DL and UA", correct = T),
+    answer("VX"),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
 ```
 
 
@@ -447,10 +486,12 @@ nycflights %>%
   arrange(desc(mean_dd))
 ```
 
-
 3.  Describe the distribution (center, variation, range, skewness/symmetry) of the **arrival** delays of these flights. Would the mean or median be a more appropriate measure of center? Would the standard deviation or the interquartile range be a more appropriate measure of variability. Why?
 
 ```{r}
+sfo_feb_flights <- nycflights %>%
+  filter(dest == "SFO", month == 2)
+
 ggplot(data = sfo_feb_flights, aes(x = arr_delay)) +
   geom_histogram(binwidth = 5)
 ```
