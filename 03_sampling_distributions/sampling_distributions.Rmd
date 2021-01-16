@@ -368,6 +368,26 @@ sample_props_100 <- global_monitor %>%
                     filter(scientist_work == "Doesn't benefit")
 ```
 
+```{r, diffsampsize2-setup}
+sample_props_10 <- global_monitor %>%
+                    rep_sample_n(size = 10, reps = 5000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+
+sample_props_50 <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 5000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+
+sample_props_100 <- global_monitor %>%
+                    rep_sample_n(size = 100, reps = 5000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+```
+
 ```{r, diffsampsize2, exercise = T}
 ggplot(data = sample_props_10, aes(x = p_hat)) +
   geom_histogram(binwidth = 0.02) + xlim(0,1)
@@ -414,23 +434,43 @@ Now we'll keep the sample size at 50 and see what happens when we change the num
 
 ```{r, diffrepsize, exercise = T}
 sample_props_50_small <- global_monitor %>%
-                    rep_sample_n(size = 50, reps = 100, replace = TRUE) %>%
+                    rep_sample_n(size = 50, reps = 50, replace = TRUE) %>%
                     count(scientist_work) %>%
                     mutate(p_hat = n /sum(n)) %>%
                     filter(scientist_work == "Doesn't benefit")
 
 sample_props_50_medium <- global_monitor %>%
-                    rep_sample_n(size = 50, reps = 1000, replace = TRUE) %>%
+                    rep_sample_n(size = 50, reps = 500, replace = TRUE) %>%
                     count(scientist_work) %>%
                     mutate(p_hat = n /sum(n)) %>%
                     filter(scientist_work == "Doesn't benefit")
 
 sample_props_50_large <- global_monitor %>%
-                    rep_sample_n(size = 50, reps = 10000, replace = TRUE) %>%
+                    rep_sample_n(size = 50, reps = 5000, replace = TRUE) %>%
                     count(scientist_work) %>%
                     mutate(p_hat = n /sum(n)) %>%
                     filter(scientist_work == "Doesn't benefit")
 
+```
+
+```{r, diffrepsize2-setup}
+sample_props_50_small <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 50, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+
+sample_props_50_medium <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 500, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+
+sample_props_50_large <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 5000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
 ```
 
 ```{r, diffrepsize2, exercise = T}
