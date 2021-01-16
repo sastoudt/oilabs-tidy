@@ -1,33 +1,42 @@
 ---
 title: "Foundations for statistical inference - Sampling distributions"
-runtime: shiny
-output:
-  html_document:
-    css: www/lab.css
-    highlight: pygments
-    theme: cerulean
-    toc: true
-    toc_float: true
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
 ---
 
-```{r global_options, include=FALSE}
-knitr::opts_chunk$set(eval = TRUE, results = FALSE, fig.show = "hide", message = FALSE, warning = F)
+```{r setup, include=FALSE,message=FALSE}
+library(learnr)
+library(tidyverse)
+library(gradethis)
+library(openintro)
+library(infer)
+tutorial_options(
+  # use gradethis for checking
+  exercise.checker = gradethis::grade_learnr
+  )
+knitr::opts_chunk$set(echo = FALSE)
+
+global_monitor <- tibble(
+  scientist_work = c(rep("Benefits", 80000), rep("Doesn't benefit", 20000))
+)
 ```
 
 ## Logistics
 
-This lab will occur remotely and in pairs (there may be one group of three). For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s). 
+This lab will occur remotely and in groups of three. For those of you participating synchronously, you will find the Zoom room information on [Moodle](https://moodle.smith.edu/). I will assign you to a breakout room with your partner(s) from last week. 
 
 For those participating syncronously I will be available in the main Zoom room to answer questions. If you have a question or technical problem, click the "Ask for Help" button (it looks like a question mark) in the meeting controls, and I will be alerted to join your breakout room.  
 
 For those of you participating asynchronously, alert me to technical challengs over Slack DM, and I will get back to you as soon as possible. For questions about the content of the lab, please sign up for an office hour time block. 
 
-Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To do so, one of you can be the main recorder of answers in the lab document. It may be helpful to share your screen. You will be working with this same partner/group for the next lab, so you will switch roles next week. 
+Each of you should be writing and running code, examining output, and answering the exercises throughout the lab. However, you only need to turn in one final lab report. To be clear, everyone submits files to Moodle, but the files can be the same within a group. Today one of you should be the main recorder of answers in the lab document. You will share this document with your teammates. As you work it may be helpful to share your screen. Be sure to switch roles from last week so that someone else is the main recorder. It may be helpful to share your screen. 
 
 You all should also feel free to ask and answer questions amongst yourselves via Zoom if participating synchronously or via Slack if participating asynchronously. Please note at the end of the lab document who you consulted for help.
 
-
-## Getting Started
+## Getting started
 
 In this lab, you will investigate the ways in which the statistics from a random 
 sample of data can serve as point estimates for population parameters. We're 
@@ -42,7 +51,7 @@ We will also use the **infer** package for resampling.
 
 Let's load the packages.
 
-```{r load-packages, message=FALSE}
+```{r load-packages, exercise = T}
 library(tidyverse)
 library(openintro)
 library(infer)
@@ -55,16 +64,11 @@ in this lab. This means that each time you rerun the sampling code, you will get
 
 Talking more about this is beyond the scope of the class, but if you are interested, I point you to Kellie Ottoboni's cool work on [sampling in R](http://www.kellieottoboni.com/posts/2019/01/random-problems-with-r/).
 
-```{r set-seed, message = F}
+```{r set-seed, exercise = T}
 set.seed(818155)
 ```
 
-
-### Creating a reproducible lab report
-
-To create your new lab report, in RStudio, go to New File -> R Markdown... Then, choose From Template and then choose `Lab Report for OpenIntro Statistics Labs` from the list of templates.
-
-### The data
+## The data
 
 A 2019 Gallup report states the following:
 
@@ -78,7 +82,7 @@ We will first create our population assuming a population size of 100,000.
 This means 20,000 (20%) of the population think the work scientists do does not 
 benefit them personally and the remaining 80,000 think it does.
 
-```{r}
+```{r, data, exercise = T}
 global_monitor <- tibble(
   scientist_work = c(rep("Benefits", 80000), rep("Doesn't benefit", 20000))
 )
@@ -88,7 +92,7 @@ The `tibble()` function makes a tidy data frame. The name of the data frame is `
 
 We can quickly visualize the distribution of these responses using a bar plot. Note that `coord_flip()` makes the bars go left to right instead of top to bottom to save space on the page.
 
-```{r bar-plot-pop, fig.height=2.5, fig.width=10}
+```{r bar-plot-pop, exercise = T}
 ggplot(global_monitor, aes(x = scientist_work)) +
   geom_bar() +
   labs(
@@ -100,7 +104,7 @@ ggplot(global_monitor, aes(x = scientist_work)) +
 
 We can also obtain summary statistics to confirm we constructed the data frame correctly. `count` is a shortcut to `group_by(scientist_work) %>% summarise(n = n())`
 
-```{r summ-stat-pop, results = TRUE}
+```{r summ-stat-pop, exercise = T}
 global_monitor %>%
   count(scientist_work) 
 
@@ -109,7 +113,7 @@ global_monitor %>%
   mutate(p = n /sum(n))
 ```
 
-## The unknown sampling distribution
+## The unknown 
 
 In this lab, you have access to the entire population, but this is rarely the case in real life. 
 Gathering information on an entire population is often extremely costly or impossible. 
@@ -117,7 +121,7 @@ Because of this, we often take a sample of the population and use that to unders
 
 If you are interested in estimating the proportion of people who don't think the work scientists do benefits them, you can use the `slice_sample` command to survey the population.
 
-```{r samp1}
+```{r samp1, exercise = T}
 samp1 <- global_monitor %>%
   slice_sample(n = 50)
 ```
@@ -126,52 +130,105 @@ This command collects a simple random sample of size 50 from the `global_monitor
 This is similar to randomly drawing names from a hat that contains the names of all in the population.
 Working with these 50 names is considerably simpler than working with all 100,000 people in the population.
 
-1.  Describe the distribution of responses in this sample. How does it compare to the 
-    distribution of responses in the population. **Hint:** Although the `slice_sample` 
-    function takes a random sample of observations (i.e. rows) from the dataset, 
-    you can still refer to the variables in the dataset with the same names. Code 
-    you presented earlier for visualizing and summarising the population data will 
-    still be useful for the sample, however be careful to not label your proportion 
-    `p` since you're now calculating a sample statistic, not a population parameters. 
-    You can customize the label of the statistics to indicate that it comes from 
-    the sample.
+Compare the proportions in the sample to the proportions in the population. Label the proportions in the sample `p_hat` to signal that it is a sample statistic rather than the true population parameter `p`. 
 
-If you're interested in estimating the proportion of all people who do not believe that the work scientists do benefits them, but you do not have access to the population data, your best single guess is the sample mean.
+```{r comparesamp-setup}
+samp1 <- global_monitor %>%
+  slice_sample(n = 50)
+```
 
-```{r phat-samp1, results = TRUE}
-samp1 %>%
+```{r comparesamp, exercise = TRUE}
+global_monitor %>%
   count(scientist_work) %>%
-  mutate(p_hat = n /sum(n))
+  mutate(p = n /sum(n))
+
+___ %>% 
+  count(___) %>%
+  mutate(___ = n/sum(n))
 ```
 
-```{r inline-calc, include=FALSE}
-# For use inline below
-samp1_p_hat <- samp1 %>% 
-  count(scientist_work) %>% 
-  mutate(p_hat = n /sum(n)) %>% 
-  filter(scientist_work == "Doesn't benefit") %>% 
-  pull(p_hat) %>% 
-  round(2)
+```{r comparesamp-solution}
+global_monitor %>%
+  count(scientist_work) %>%
+  mutate(p = n /sum(n))
+
+samp1 %>% 
+  count(scientist_work) %>%
+  mutate(p_hat = n/sum(n))
+
 ```
+
+```{r comparesamp-check}
+gradethis::grade_code()
+```
+
+If you're interested in estimating the proportion of all people who do not believe that the work scientists do benefits them, but you do not have access to the population data, your best single guess is the sample mean that you calculated above.
+
+## More sampling
 
 Depending on which 50 people you selected, your estimate could be a bit above 
-or a bit below the true population proportion of `r samp1_p_hat`. 
+or a bit below the true population proportion. 
 In general, though, the sample proportion turns out to be a pretty good estimate of the true population proportion, and you were able to get it by sampling less than 1% of the population.
 
+Take a second sample, also of size 50, and call it `samp2`. 
 
-1.  Take a second sample, also of size 50, and call it `samp2`. How does the 
-    sample proportion of `samp2` compare with that of `samp1`? Suppose we took two 
+```{r anothersamp, exercise = TRUE}
+___ <- global_monitor %>%
+  slice_sample(n = ___)
+```
+
+```{r anothersamp-solution}
+samp2 <- global_monitor %>%
+  slice_sample(n = 50)
+```
+
+```{r anothersamp-check}
+# check code
+gradethis::grade_code()
+```
+
+How does the sample proportion of `samp2` compare with that of `samp1`? 
+
+```{r anothersampcompare, exercise = TRUE}
+___ %>% 
+  ___(scientist_work) %>%
+  ___(p_hat = n/sum(n))
+```
+
+
+```{r anothersampcompare-solution}
+samp2 %>% 
+  count(scientist_work) %>%
+  mutate(p_hat = n/sum(n))
+```
+
+```{r anothersampcompare-check}
+# check code
+gradethis::grade_code()
+```
+
+```{r samplesize}
+question("Suppose we took two 
     more samples, one of size 100 and one of size 1000. Which would you think 
-    would provide a more accurate estimate of the population proportion?
+    would provide a more accurate estimate of the population proportion?",
+    answer("The sample of size 100"),
+    answer("The sample of size 1000", correct = T),
+    answer("They both would provide the same level of accuracy"),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+## Sampling distribution
 
 Not surprisingly, every time you take another random sample, you might get a different sample proportion. 
 It's useful to get a sense of just how much variability you should expect when estimating the population mean this way. 
 The distribution of sample proportions, called the *sampling distribution (of the proportion)*, can help you understand this variability. 
 In this lab, because you have access to the population, you can build up the sampling distribution for the sample proportion by repeating the above steps many times. 
 Here, we use R to take 15,000 different samples of size 50 from the population, calculate the proportion of responses in each sample, filter for only the *Doesn't benefit* responses, and store each result in a vector called `sample_props50`. 
-Note that we specify that `replace = TRUE` since sampling distributions are constructed by sampling with replacement.
+Note that we specify that `replace = TRUE` since sampling distributions are constructed by sampling with replacement. We can filter the estimates that correspond to "Doesn't benefit" only as that is our main focus.
 
-```{r iterate , results = TRUE}
+```{r iterate, exercise = T}
 sample_props50 <- global_monitor %>%
                     rep_sample_n(size = 50, reps = 15000, replace = TRUE) %>%
                     count(scientist_work) 
@@ -179,19 +236,26 @@ sample_props50 <- global_monitor %>%
 head(sample_props50)
 
 sample_props50 <- sample_props50 %>%
-                    mutate(p_hat = n /sum(n))
-
-head(sample_props50)
-
-sample_props50 <- sample_props50 %>%
+                    mutate(p_hat = n /sum(n)) %>%
                     filter(scientist_work == "Doesn't benefit")
 
 head(sample_props50)
 ```
 
+
 And we can visualize the distribution of these proportions with a histogram.
 
-```{r fig.show=T}
+```{r, showres-setup}
+sample_props50 <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 15000, replace = TRUE) %>%
+                    count(scientist_work) 
+
+sample_props50 <- sample_props50 %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+```
+
+```{r, showres, exercise = T}
 ggplot(data = sample_props50, aes(x = p_hat)) +
   geom_histogram(binwidth = 0.02) +
   labs(
@@ -202,12 +266,8 @@ ggplot(data = sample_props50, aes(x = p_hat)) +
 
 ```
 
-```{r, results = TRUE}
-dim(sample_props50)
-```
 
-
-## Interlude: Sampling distributions
+### What is a sampling distribution?
 
 The idea behind the `rep_sample_n` function is *repetition*. 
 Earlier, you took a single sample of size `n` (50) from the population of all people in the population. 
@@ -220,30 +280,65 @@ Note that in practice one rarely gets to build true sampling distributions, beca
 Without the `rep_sample_n` function, this would be painful. 
 We would have to manually run the following code 15,000 times 
 
-```{r sample-code,results= T}
-global_monitor %>%
-  slice_sample(n = 50, replace = TRUE) %>%
-  count(scientist_work) %>%
-  mutate(p_hat = n /sum(n)) %>%
-  filter(scientist_work == "Doesn't benefit")
+```{r sample-code, exercise = T}
+sample_props50 <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 15000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
 ```
 
 as well as store the resulting sample proportions each time in a separate vector.
 
 Note that for each of the 15,000 times we computed a proportion, we did so from a **different** sample!
 
-1.  To make sure you understand how sampling distributions are built, and exactly
+To make sure you understand how sampling distributions are built, and exactly
     what the `rep_sample_n` function does, try modifying the code to create a
     sampling distribution of **25 sample proportions** from **samples of size 10**, 
     and put them in a data frame named `sample_props_small`. Print the output. 
-    How many observations are there in this object called `sample_props_small`? 
-    What does each observation represent?
+  
+    
+```{r repsamp, exercise = TRUE}
+sample_props___ <- global_monitor %>%
+                    rep_sample_n(size = ___, reps = ___, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+___
+```
 
-## Sample size and the sampling distribution
+
+```{r repsamp-solution}
+sample_props_small <- global_monitor %>%
+                    rep_sample_n(size = 10, reps = 25, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+sample_props_small
+```
+
+```{r repsamp-check}
+# check code
+gradethis::grade_code()
+```
+
+```{r obs}
+question("How many observations are there in this object called `sample_props_small`? Consider what each observation represents.",
+    answer("10"),
+    answer("25", correct = T),
+    answer("20"),
+    answer("50"),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+    
+## Sample size 
 
 Mechanics aside, let's return to the reason we used the `rep_sample_n` function: to compute a sampling distribution, specifically, the sampling distribution of the proportions from samples of 50 people. 
 
-```{r hist,fig.show=T}
+```{r hist, exercise = T}
 ggplot(data = sample_props50, aes(x = p_hat)) +
   geom_histogram(binwidth = 0.02)
 ```
@@ -253,142 +348,200 @@ Because the sample proportion is an unbiased estimator, the sampling distributio
 
 In the remainder of this section, you will work on getting a sense of the effect that sample size has on your sampling distribution.
 
-1.  Use the app below to create sampling distributions of proportions of 
-    *Doesn't benefit* from samples of size 10, 50, and 100. Use 5,000 simulations. 
-    What does each observation in the sampling distribution represent? 
-    How does the mean, standar error, and shape of the sampling distribution 
-    change as the sample size increases? How (if at all) do these values change 
-    if you increase the number of simulations? (You do not need to include plots 
-    in your answer.)
-    
-```{r shiny, echo=FALSE, eval=TRUE, results = TRUE}
-shinyApp(
-  ui <- fluidPage(
-    
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-      sidebarPanel(
-        
-        selectInput("outcome",
-                    "Outcome of interest:",
-                    choices = c("Benefits", "Doesn't benefit"),
-                    selected = "Doesn't benefit"),
-        
-        numericInput("n_samp",
-                     "Sample size:",
-                     min = 1,
-                     max = nrow(global_monitor),
-                     value = 30),
-        
-        numericInput("n_rep",
-                     "Number of samples:",
-                     min = 1,
-                     max = 30000,
-                     value = 15000),
-        
-        hr(),
-        
-        sliderInput("binwidth",
-                    "Binwidth:",
-                    min = 0, max = 0.5,
-                    value = 0.02,
-                    step = 0.005)
-        
-      ),
-      
-      # Show a plot of the generated distribution
-      mainPanel(
-        plotOutput("sampling_plot"),
-        textOutput("sampling_mean"),
-        textOutput("sampling_se")
-      )
-    )
-  ),
-  
-  server <- function(input, output) {
-    
-    # create sampling distribution
-    sampling_dist <- reactive({
-      global_monitor %>%
-        rep_sample_n(size = input$n_samp, reps = input$n_rep, replace = TRUE) %>%
-        count(scientist_work) %>%
-        mutate(p_hat = n /sum(n)) %>%
-        filter(scientist_work == input$outcome)
-    })
-    
-    # plot sampling distribution
-    output$sampling_plot <- renderPlot({
-      
-      ggplot(sampling_dist(), aes(x = p_hat)) +
-        geom_histogram(binwidth = input$binwidth) +
-        xlim(0, 1) +
-        labs(
-          x = paste0("p_hat (", input$outcome, ")"),
-          title = "Sampling distribution of p_hat",
-          subtitle = paste0("Sample size = ", input$n_samp, " Number of samples = ", input$n_rep)
-        ) +
-        theme(plot.title = element_text(face = "bold", size = 16))
-    })
-    
-    ggplot(data = sample_props50, aes(x = p_hat)) +
-      geom_histogram(binwidth = 0.02) +
-      labs(
-        x = "p_hat (Doesn't benefit)",
-        title = "Sampling distribution of p_hat",
-        subtitle = "Sample size = 50, Number of samples = 15000"
-      )
-    
-    # mean of sampling distribution
-    output$sampling_mean <- renderText({
-      paste0("Mean of sampling distribution = ", round(mean(sampling_dist()$p_hat), 2))
-    })
-    
-    # mean of sampling distribution
-    output$sampling_se <- renderText({
-      paste0("SE of sampling distribution = ", round(sd(sampling_dist()$p_hat), 2))
-    })
-  },
-  
-  options = list(height = 900) 
+```{r, diffsampsize, exercise = T}
+sample_props_10 <- global_monitor %>%
+                    rep_sample_n(size = 10, reps = 5000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+
+sample_props_50 <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 5000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+
+sample_props_100 <- global_monitor %>%
+                    rep_sample_n(size = 100, reps = 5000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+```
+
+```{r, diffsampsize2, exercise = T}
+ggplot(data = sample_props_10, aes(x = p_hat)) +
+  geom_histogram(binwidth = 0.02) + xlim(0,1)
+ggplot(data = sample_props_50, aes(x = p_hat)) +
+  geom_histogram(binwidth = 0.02) + xlim(0,1)
+ggplot(data = sample_props_100, aes(x = p_hat)) +
+  geom_histogram(binwidth = 0.02) + xlim(0,1)
+```
+
+
+```{r meanchange}
+question("How does the mean change as the sample size increases?",
+    answer("gets smaller"),
+    answer("gets larger"),
+    answer("stays about the same", correct = T),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+```{r sdchange}
+question("How does the standard error change as the sample size increases?",
+    answer("gets smaller", correct = T),
+    answer("gets larger"),
+    answer("stays about the same"),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+```{r shapechange}
+question("How does the shape of the distribution change as the sample size increases?",
+    answer("gets rougher"),
+    answer("gets smoother"),
+    answer("stays about the same", correct = T),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+## Number of replicates
+
+Now we'll keep the sample size at 50 and see what happens when we change the number of replicates.
+
+```{r, diffrepsize, exercise = T}
+sample_props_50_small <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 100, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+
+sample_props_50_medium <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 1000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+
+sample_props_50_large <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 10000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+
+```
+
+```{r, diffrepsize2, exercise = T}
+ggplot(data = sample_props_50_small, aes(x = p_hat)) +
+  geom_histogram(binwidth = 0.02) + xlim(0,1)
+
+ggplot(data = sample_props_50_medium, aes(x = p_hat)) +
+  geom_histogram(binwidth = 0.02) + xlim(0,1)
+
+ggplot(data = sample_props_50_large, aes(x = p_hat)) +
+  geom_histogram(binwidth = 0.02) + xlim(0,1)
+
+```
+
+```{r meanchange2}
+question("How does the mean change as the number of replicates increases?",
+    answer("gets smaller"),
+    answer("gets larger"),
+    answer("stays about the same", correct = T),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+```{r sdchange2}
+question("How does the standard error change as the number of replicates increases?",
+    answer("gets smaller"),
+    answer("gets larger"),
+    answer("stays about the same", correct = T),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+```{r shapechange2}
+question("How does the shape of the distribution change as the number of replicates increases?",
+    answer("gets rougher"),
+    answer("gets smoother", correct = T),
+    answer("stays about the same"),
+    allow_retry = TRUE,
+    random_answer_order = F
+  )
+```
+
+## Submit checkpoint
+
+```{r context="server"}
+learnrhash::encoder_logic()
+```
+
+```{r encode, echo=FALSE}
+learnrhash::encoder_ui(
+  ui_before = div(strong("Submit your hash in the form below."), br(), br()),
+  ui_after  = learnrhash::iframe_ui(
+    src = "https://docs.google.com/forms/", ## change link, include name
+    width="900px", height= "1000px"
+  )
 )
 ```
 
-* * *
+## Creating a reproducible lab report
 
-## More Practice
+For the rest of this lab you will R Markdown to create a reproducible lab report. 
+In RStudio, go to New File -> R Markdown... Then, choose From Template and then choose `Lab Report` from the list of templates. Make sure to name the document appropriately and pick a location for the file where you know how to find it on your computer.
+
+See the following video describing how to get started with creating these 
+reports for this lab, and all future labs:
+
+[**Basic R Markdown with an OpenIntro Lab**](https://www.youtube.com/watch?v=Pdc368lS2hk)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Pdc368lS2hk" frameborder="0" allowfullscreen></iframe>
+
+**Note: This video was made using `oilabs`. We will NOT be using `oilabs`. Be sure to pick the Lab Report template that goes with `openintro` as shown in screenshot above. Make sure you have `library(openintro)` in your first chunk not `library(oilabs)`.**
+
+## Questions for Lab Report
+
+Answer in an Rmd file based on the lab report template. Remember you will need to load appropriate packages, set a seed, and create the dataset.
+
+```{r}
+global_monitor <- tibble(
+  scientist_work = c(rep("Benefits", 80000), rep("Doesn't benefit", 20000))
+)
+```
 
 So far, you have only focused on estimating the proportion of those you think the work scientists doesn't benefit them. 
 Now, you'll try to estimate the proportion of those who think it does.
 
-Note that while you might be able to answer some of these questions using the app,
-you are expected to write the required code and produce the necessary plots and
-summary statistics. 
-You are welcome to use the app for exploration.
 
 1.  Take a sample of size 15 from the population and calculate the proportion of 
     people in this sample who think the work scientists do enchances their lives. 
-    Using this sample, what is your best point estimate of the population proportion 
-    of people who think the work scientists do enchances their lives?
 
-1.  Change your sample size from 15 to 150, then compute the sampling 
+2. Using your sample from question one, what is your best point estimate of the population proportion of people who think the work scientists do enchances their lives?
+
+3.  Change your sample size from 15 to 150, then compute the sampling 
     distribution using the same method as above, and store these proportions in a 
-    new object called `sample_props150`. Describe the shape of this sampling 
-    distribution and compare it to the sampling distribution for a sample 
-    size of 15. Based on this sampling distribution, what would you guess to 
-    be the true proportion of those who think the work scientists do enchances 
-    their lives?
+    new object called `sample_props150`. 
+    
+4. Describe the shape of this sampling distribution and compare it to the sampling distribution for a sample size of 15. 
     
 ## Deliverables
+
+Make sure you have submitted your hash to the Google Form for the first part of the lab.
 
 When you are finished editing your Markdown document click the "Knit" button and choose "Knit to HTML" in the top left corner of RStudio. This will run all of your code and create a formatted document of the output. If you get an error, it means something in your Markdown file isn't right, either an error in code or some error in formatting. Call me into your breakout room, and we will troubleshoot.
 
 Submit your Markdown document and knitted file to [Moodle](https://moodle.smith.edu/) as:
 
-LastName-LastName-L-03.Rmd  (add a third last name if applicable)
+LastName-LastName-LastName-L-03.Rmd  (add a third last name if applicable)
 
-LastName-LastName-L-03.html
+LastName-LastName-LastName-L-03.html
 
-*Due*: Monday, September 21st (beginning of class time, Eastern time)
+*Due*: Monday (beginning of class time, Eastern time)
 
 * * *
 
