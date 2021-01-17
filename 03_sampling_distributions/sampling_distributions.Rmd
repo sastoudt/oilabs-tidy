@@ -245,7 +245,7 @@ head(sample_props50)
 
 And we can visualize the distribution of these proportions with a histogram.
 
-```{r, showres-setup}
+```{r showres-setup}
 sample_props50 <- global_monitor %>%
                     rep_sample_n(size = 50, reps = 15000, replace = TRUE) %>%
                     count(scientist_work) 
@@ -255,7 +255,7 @@ sample_props50 <- sample_props50 %>%
                     filter(scientist_work == "Doesn't benefit")
 ```
 
-```{r, showres, exercise = T}
+```{r showres, exercise = T}
 ggplot(data = sample_props50, aes(x = p_hat)) +
   geom_histogram(binwidth = 0.02) +
   labs(
@@ -348,7 +348,7 @@ Because the sample proportion is an unbiased estimator, the sampling distributio
 
 In the remainder of this section, you will work on getting a sense of the effect that sample size has on your sampling distribution.
 
-```{r, diffsampsize, exercise = T}
+```{r diffsampsize, exercise = T}
 sample_props_10 <- global_monitor %>%
                     rep_sample_n(size = 10, reps = 5000, replace = TRUE) %>%
                     count(scientist_work) %>%
@@ -368,7 +368,7 @@ sample_props_100 <- global_monitor %>%
                     filter(scientist_work == "Doesn't benefit")
 ```
 
-```{r, diffsampsize2-setup}
+```{r diffsampsize2-setup}
 sample_props_10 <- global_monitor %>%
                     rep_sample_n(size = 10, reps = 5000, replace = TRUE) %>%
                     count(scientist_work) %>%
@@ -388,7 +388,7 @@ sample_props_100 <- global_monitor %>%
                     filter(scientist_work == "Doesn't benefit")
 ```
 
-```{r, diffsampsize2, exercise = T}
+```{r diffsampsize2, exercise = T}
 ggplot(data = sample_props_10, aes(x = p_hat)) +
   geom_histogram(binwidth = 0.02) + xlim(0,1)
 ggplot(data = sample_props_50, aes(x = p_hat)) +
@@ -432,7 +432,7 @@ question("How does the shape of the distribution change as the sample size incre
 
 Now we'll keep the sample size at 50 and see what happens when we change the number of replicates.
 
-```{r, diffrepsize, exercise = T}
+```{r diffrepsize, exercise = T}
 sample_props_50_small <- global_monitor %>%
                     rep_sample_n(size = 50, reps = 50, replace = TRUE) %>%
                     count(scientist_work) %>%
@@ -453,7 +453,7 @@ sample_props_50_large <- global_monitor %>%
 
 ```
 
-```{r, diffrepsize2-setup}
+```{r diffrepsize2-setup}
 sample_props_50_small <- global_monitor %>%
                     rep_sample_n(size = 50, reps = 50, replace = TRUE) %>%
                     count(scientist_work) %>%
@@ -473,7 +473,7 @@ sample_props_50_large <- global_monitor %>%
                     filter(scientist_work == "Doesn't benefit")
 ```
 
-```{r, diffrepsize2, exercise = T}
+```{r diffrepsize2, exercise = T}
 ggplot(data = sample_props_50_small, aes(x = p_hat)) +
   geom_histogram(binwidth = 0.02) + xlim(0,1)
 
