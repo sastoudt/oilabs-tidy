@@ -181,7 +181,12 @@ In this case, you already have an object called `arbuthnot`, so this command upd
 
 You can make a line plot of the total number of baptisms per year with the command
 
-```{r plot-total-vs-year, exercise = T}
+```{r plottotalvsyear-setup}
+arbuthnot <- arbuthnot %>%
+  mutate(total = boys + girls)
+```
+
+```{r plottotalvsyear, exercise = T}
 ggplot(data = arbuthnot, aes(x = year, y = total)) + 
   geom_line()
 ```
@@ -207,14 +212,19 @@ You can also compute the proportion of newborns that are boys in 1629
 
 or you can compute this for all years simultaneously and append it to the dataset
 
-```{r calc-prop-boys-vars, exercise = T}
+```{r calcpropboysvars-setup}
+arbuthnot <- arbuthnot %>% mutate(total = boys + girls) %>%
+  mutate(boy_ratio = boys / total)
+```
+
+```{r calcpropboysvars, exercise = T}
 arbuthnot <- arbuthnot %>%
   mutate(boy_ratio = boys / total)
 ```
 
 Note that we are using the new `total` variable we created earlier in our calculations.
 
-Generate a plot of the proportion of boys born over time. What do you see? 
+Generate a line plot of the proportion of boys born over time. What do you see? 
 
 ```{r plotboysprop-setup}
 arbuthnot <- arbuthnot %>% mutate(total = boys + girls) %>%
@@ -291,7 +301,7 @@ What are the dimensions of the data frame?
 glimpse(___)
 ```
 
-```{r sdimpresent-solution}
+```{r dimpresent-solution}
 # solution code
 glimpse(present)
 ```
@@ -417,7 +427,7 @@ gradethis::grade_code()
 ## Submit progress
 
 ```{r context="server"}
-learnrhash::encoder_logic()
+learnrhash::encoder_logic(strip_output = T)
 ```
 
 ```{r encode, echo=FALSE}

@@ -189,6 +189,11 @@ gradethis::grade_code()
 
 How does the sample proportion of `samp2` compare with that of `samp1`? 
 
+```{r anothersampcompare-setup}
+samp2 <- global_monitor %>%
+  slice_sample(n = 50)
+```
+
 ```{r anothersampcompare, exercise = TRUE}
 ___ %>% 
   ___(scientist_work) %>%
@@ -337,6 +342,14 @@ question("How many observations are there in this object called `sample_props_sm
 ## Sample size 
 
 Mechanics aside, let's return to the reason we used the `rep_sample_n` function: to compute a sampling distribution, specifically, the sampling distribution of the proportions from samples of 50 people. 
+
+```{r hist-setup}
+sample_props50 <- global_monitor %>%
+                    rep_sample_n(size = 50, reps = 15000, replace = TRUE) %>%
+                    count(scientist_work) %>%
+                    mutate(p_hat = n /sum(n)) %>%
+                    filter(scientist_work == "Doesn't benefit")
+```
 
 ```{r hist, exercise = T}
 ggplot(data = sample_props50, aes(x = p_hat)) +

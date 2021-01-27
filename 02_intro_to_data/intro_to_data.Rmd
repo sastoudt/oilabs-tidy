@@ -17,6 +17,12 @@ tutorial_options(
   exercise.checker = gradethis::grade_learnr
   )
 knitr::opts_chunk$set(echo = FALSE)
+
+lax_flights <- nycflights %>%
+  filter(dest == "LAX")
+
+sfo_feb_flights <- nycflights %>%
+  filter(dest == "SFO", month == 2)
 ```
 
 ## Logistics
@@ -320,10 +326,6 @@ statistics.
 
 Calculate the median and interquartile range for `arr_delay`s of flights in the `sfo_feb_flights` data frame, grouped by carrier. 
 
-```{r summarycarrier-setup}
-sfo_feb_flights <- nycflights %>%
-  filter(dest == "SFO", month == 2)
-```
 
 ```{r summarycarrier, exercise = TRUE}
 ___ %>%
