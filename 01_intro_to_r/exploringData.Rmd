@@ -186,7 +186,7 @@ arbuthnot <- arbuthnot %>%
   mutate(total = boys + girls)
 ```
 
-```{r plottotalvsyear, exercise = T}
+```{r plottotalvsyear, exercise = TRUE}
 ggplot(data = arbuthnot, aes(x = year, y = total)) + 
   geom_line()
 ```
@@ -217,7 +217,7 @@ arbuthnot <- arbuthnot %>% mutate(total = boys + girls) %>%
   mutate(boy_ratio = boys / total)
 ```
 
-```{r calcpropboysvars, exercise = T}
+```{r calcpropboysvars, exercise = TRUE}
 arbuthnot <- arbuthnot %>%
   mutate(boy_ratio = boys / total)
 ```
