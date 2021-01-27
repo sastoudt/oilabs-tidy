@@ -330,8 +330,8 @@ gradethis::grade_code()
 ```{r obs}
 question("How many observations are there in this object called `sample_props_small`? Consider what each observation represents.",
     answer("10"),
-    answer("25", correct = T),
     answer("20"),
+    answer("25", correct = T),
     answer("50"),
     allow_retry = TRUE,
     random_answer_order = F
@@ -531,14 +531,14 @@ question("How does the shape of the distribution change as the number of replica
 ## Submit checkpoint
 
 ```{r context="server"}
-learnrhash::encoder_logic()
+learnrhash::encoder_logic(strip_output = T)
 ```
 
 ```{r encode, echo=FALSE}
 learnrhash::encoder_ui(
   ui_before = div(strong("Submit your hash in the form below."), br(), br()),
   ui_after  = learnrhash::iframe_ui(
-    src = "https://docs.google.com/forms/", ## change link, include name
+    src = "https://docs.google.com/forms/d/e/1FAIpQLSda78rAQWziQ-L6eDanGoDAhcfoi6JU_dg-c-6A9rrEXdvJwg/viewform", ## change link, include name
     width="900px", height= "1000px"
   )
 )
