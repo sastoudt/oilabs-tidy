@@ -401,7 +401,12 @@ version of this data frame that includes the new `dep_type` variable.
 
 We can handle all of the remaining steps in one code chunk:
 
-```{r ot-dep-rate, exercise = T}
+```{r otdeprate-setup}
+nycflights <- nycflights %>%
+  mutate(dep_type = ifelse(dep_delay < 5, "on time", "delayed"))
+```
+
+```{r otdeprate, exercise = TRUE}
 nycflights %>%
   group_by(origin) %>%
   summarise(ot_dep_rate = sum(dep_type == "on time") / n()) %>%
@@ -428,14 +433,14 @@ question("If you were selecting an airport simply based on the on time departure
 ## Submit checkpoint
 
 ```{r context="server"}
-learnrhash::encoder_logic()
+learnrhash::encoder_logic(strip_output = T)
 ```
 
 ```{r encode, echo=FALSE}
 learnrhash::encoder_ui(
   ui_before = div(strong("Submit your hash in the form below."), br(), br()),
   ui_after  = learnrhash::iframe_ui(
-    src = "https://docs.google.com/forms/", ## change link, include name
+    src = "https://docs.google.com/forms/d/e/1FAIpQLSda78rAQWziQ-L6eDanGoDAhcfoi6JU_dg-c-6A9rrEXdvJwg/viewform", ## change link, include name
     width="900px", height= "1000px"
   )
 )
